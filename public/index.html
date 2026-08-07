@@ -528,7 +528,17 @@ input,textarea,select{font-family:inherit}
 #cloudBindBanner{display:none;background:linear-gradient(160deg,#EAF3EC,#DCEFE0);color:#3f7d52;font-size:12.5px;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(143,181,140,.5);font-weight:600;cursor:pointer}
 #cloudBindBanner:hover{filter:brightness(.98)}
 body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textarea{opacity:.85}
-@media(max-width:768px){ .cloud-status{font-size:11px;padding:3px 8px;right:10px} }
+  @media(max-width:768px){ .cloud-status{font-size:11px;padding:3px 8px;right:10px} }
+/* ===== Mobile bottom tab bar ===== */
+.bottom-tabbar{display:none}
+@media(max-width:768px){
+  .bottom-tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:120;background:linear-gradient(180deg,#FBF4E9,#F2E6D0);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(176,147,110,.15);padding-bottom:env(safe-area-inset-bottom)}
+  .btab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;background:none;border:none;color:var(--text-l);font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .btab .btab-ico{font-size:20px;line-height:1}
+  .btab.active{color:var(--primary-d);font-weight:700}
+  .btab.active .btab-ico{transform:translateY(-1px)}
+  .main-content{padding-bottom:84px}
+}
 </style>
 </head>
 <body>
@@ -1032,6 +1042,24 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
     <!-- Growth records (height/weight) -->
     <div id="growthPanel">
+      <div class="card" id="babyInfoCard">
+        <div class="card-title"><span class="icon">👶</span> 宝宝信息（发育曲线对比）</div>
+        <div class="form-row" style="align-items:stretch">
+          <div class="form-group" style="flex:1">
+            <label class="form-label">性别</label>
+            <select class="form-select" id="babyGender" onchange="saveBabyInfo()">
+              <option value="">请选择</option>
+              <option value="boy">👦 男宝</option>
+              <option value="girl">👧 女宝</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label">出生日期</label>
+            <input type="date" class="form-input" id="babyBirth" onchange="saveBabyInfo()">
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-l);margin-top:2px">填写后，发育趋势图将叠加 WHO 标准百分位曲线，直观判断宝宝身高体重是否在正常区间。</p>
+      </div>
       <div class="card">
         <div class="card-title"><span class="icon">✏️</span> 记录身高体重</div>
         <div class="form-row" style="align-items:stretch">
@@ -1322,6 +1350,15 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
 </main>
 
+<!-- Mobile bottom tab bar -->
+<nav class="bottom-tabbar" id="bottomTabbar">
+  <button class="btab active" data-view="dashboard" onclick="switchView('dashboard')"><span class="btab-ico">📊</span><span class="btab-label">首页</span></button>
+  <button class="btab" data-view="inventory" onclick="switchView('inventory')"><span class="btab-ico">📦</span><span class="btab-label">待产</span></button>
+  <button class="btab" data-view="growth" onclick="switchView('growth')"><span class="btab-ico">📏</span><span class="btab-label">成长</span></button>
+  <button class="btab" data-view="spending" onclick="switchView('spending')"><span class="btab-ico">💰</span><span class="btab-label">花销</span></button>
+  <button class="btab" data-view="more" onclick="toggleSidebar(true)"><span class="btab-ico">☰</span><span class="btab-label">更多</span></button>
+</nav>
+
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modalContent"></div>
@@ -1354,7 +1391,8 @@ const defaultData = {
   babyDaily: [],
   customSpendCats: [],
   customReminders: [],
-  knowCategories: []
+  knowCategories: [],
+  babyInfo: { gender:'', birthDate:'' }
 };
 
 // Default inventory items
@@ -1501,6 +1539,7 @@ function normalizeData() {
   if (!data.customSpendCats) data.customSpendCats = [];
   if (!data.customReminders) data.customReminders = [];
   if (!data.knowCategories) data.knowCategories = [];
+  if (!data.babyInfo) data.babyInfo = { gender:'', birthDate:'' };
   (data.customSpendCats||[]).forEach(c => { if (!data.spending[c.key]) data.spending[c.key] = []; });
 }
 
@@ -1722,6 +1761,10 @@ function switchView(view) {
   viewEl.classList.add('active');
   const navEl = document.querySelector(`.nav-item[data-view="${view}"]`);
   if (navEl) navEl.classList.add('active');
+  // 更新移动端底部 Tab 高亮
+  document.querySelectorAll('.btab').forEach(t => {
+    if (t.dataset.view !== 'more') t.classList.toggle('active', t.dataset.view === view);
+  });
   toggleSidebar(false); // always close sidebar after navigation
   renderView(view);
   window.scrollTo(0, 0);
@@ -3705,6 +3748,10 @@ function renderGrowth() {
   if (gd && !gd.value) gd.value = today;
   const bd = document.getElementById('bdDate');
   if (bd && !bd.value) bd.value = today;
+  const bg = document.getElementById('babyGender');
+  if (bg) bg.value = data.babyInfo.gender || '';
+  const bb = document.getElementById('babyBirth');
+  if (bb) bb.value = data.babyInfo.birthDate || '';
   renderGrowthList();
   renderGrowthChart();
   renderBabyDailyList();
@@ -3766,80 +3813,147 @@ function renderGrowthList() {
   }).join('');
 }
 
+// ============ WHO 儿童生长标准（0–24月，近似值，来源 WHO 2006 标准） ============
+// 每个子数组：[月龄, P3, P15, P50, P85, P97]
+const WHO = {
+  boy: {
+    weight: [[0,2.5,2.9,3.3,3.9,4.3],[1,3.4,3.9,4.5,5.1,5.8],[2,4.3,4.9,5.6,6.3,7.1],[3,5.0,5.7,6.4,7.2,8.0],[4,5.6,6.3,7.0,7.8,8.7],[5,6.1,6.8,7.5,8.4,9.3],[6,6.5,7.2,7.9,8.8,9.8],[7,6.8,7.6,8.3,9.2,10.2],[8,7.1,7.9,8.6,9.6,10.6],[9,7.4,8.2,8.9,9.9,11.0],[10,7.6,8.5,9.2,10.2,11.3],[11,7.9,8.7,9.5,10.5,11.6],[12,8.1,9.0,9.8,10.8,11.9],[15,8.7,9.6,10.4,11.5,12.6],[18,9.3,10.2,11.0,12.1,13.3],[21,9.8,10.7,11.6,12.7,13.9],[24,10.3,11.2,12.1,13.3,14.5]],
+    height: [[0,46.1,47.8,49.9,51.8,53.2],[1,50.8,52.5,54.6,56.6,58.2],[2,54.4,56.1,58.4,60.4,62.1],[3,57.3,59.1,61.4,63.5,65.3],[4,59.7,61.5,63.9,66.0,67.9],[5,61.7,63.6,66.0,68.2,70.1],[6,63.3,65.3,67.6,69.9,71.9],[7,64.8,66.8,69.2,71.5,73.6],[8,66.1,68.2,70.6,72.9,75.1],[9,67.3,69.4,71.9,74.2,76.5],[10,68.4,70.6,73.1,75.5,77.8],[11,69.5,71.7,74.2,76.7,79.1],[12,70.5,72.8,75.3,77.8,80.3],[15,73.3,75.7,78.3,80.9,83.5],[18,75.8,78.3,81.0,83.7,86.5],[21,78.1,80.7,83.5,86.3,89.2],[24,80.2,82.9,85.7,88.6,91.6]]
+  },
+  girl: {
+    weight: [[0,2.4,2.8,3.2,3.7,4.1],[1,3.2,3.7,4.2,4.8,5.3],[2,4.0,4.6,5.1,5.8,6.4],[3,4.6,5.3,5.8,6.6,7.2],[4,5.1,5.8,6.4,7.1,7.8],[5,5.6,6.2,6.9,7.6,8.4],[6,5.9,6.6,7.3,8.1,8.9],[7,6.2,6.9,7.6,8.4,9.2],[8,6.5,7.2,7.9,8.7,9.6],[9,6.7,7.5,8.2,9.0,9.9],[10,6.9,7.7,8.4,9.3,10.2],[11,7.2,8.0,8.7,9.6,10.5],[12,7.4,8.2,8.9,9.8,10.8],[15,7.9,8.8,9.5,10.5,11.5],[18,8.4,9.3,10.1,11.1,12.1],[21,8.9,9.8,10.6,11.7,12.7],[24,9.2,10.2,11.0,12.1,13.2]],
+    height: [[0,45.4,47.1,49.1,51.0,52.4],[1,49.8,51.5,53.7,55.6,57.3],[2,53.2,55.0,57.4,59.4,61.2],[3,56.0,57.9,60.3,62.3,64.2],[4,58.2,60.2,62.6,64.7,66.7],[5,60.1,62.1,64.5,66.7,68.8],[6,61.7,63.8,66.3,68.5,70.6],[7,63.1,65.3,67.8,70.1,72.2],[8,64.4,66.6,69.1,71.5,73.6],[9,65.6,67.9,70.4,72.8,75.0],[10,66.7,69.0,71.6,74.1,76.3],[11,67.7,70.1,72.7,75.2,77.5],[12,68.7,71.1,73.7,76.3,78.6],[15,71.4,73.9,76.6,79.3,81.7],[18,73.9,76.5,79.3,82.1,84.7],[21,76.1,78.9,81.7,84.6,87.4],[24,78.1,81.0,83.9,86.9,89.8]]
+  }
+};
+// 线性插值：返回某月龄某百分位（0:P3 1:P15 2:P50 3:P85 4:P97）的值
+function whoInterp(gender, metric, pctIdx, month) {
+  const arr = (WHO[gender] && WHO[gender][metric]) || [];
+  if (!arr.length) return null;
+  if (month <= arr[0][0]) return arr[0][pctIdx+1];
+  if (month >= arr[arr.length-1][0]) return arr[arr.length-1][pctIdx+1];
+  for (let i=0;i<arr.length-1;i++){
+    const a=arr[i], b=arr[i+1];
+    if (month>=a[0] && month<=b[0]){
+      const t=(month-a[0])/(b[0]-a[0]);
+      return a[pctIdx+1]+(b[pctIdx+1]-a[pctIdx+1])*t;
+    }
+  }
+  return null;
+}
+// 月龄（出生日期 → 记录日期）
+function calcMonths(birthDate, recordDate) {
+  if (!birthDate || !recordDate) return null;
+  const b=new Date(birthDate), r=new Date(recordDate);
+  if (isNaN(b)||isNaN(r)) return null;
+  let m=(r.getFullYear()-b.getFullYear())*12+(r.getMonth()-b.getMonth());
+  m+=(r.getDate()-b.getDate())/30;
+  return m;
+}
+function saveBabyInfo() {
+  const g=document.getElementById('babyGender'), b=document.getElementById('babyBirth');
+  if (!g||!b) return;
+  data.babyInfo.gender=g.value; data.babyInfo.birthDate=b.value;
+  saveData(); renderGrowthChart(); showToast('✅ 宝宝信息已保存');
+}
+// 绘制单个指标图（体重/身高），叠加 WHO 百分位带
+function drawMetricChart(metric, unit, userPts, color, title) {
+  const W=600,H=230,P={l:42,r:18,t:18,b:34};
+  const cw=W-P.l-P.r, ch=H-P.t-P.b;
+  const gender=data.babyInfo.gender;
+  const useWho=(gender==='boy'||gender==='girl');
+  const maxMonth=Math.max(24,...userPts.map(p=>p.month||0));
+  let yMin,yMax;
+  if (useWho){
+    yMin=whoInterp(gender,metric,0,0);
+    yMax=whoInterp(gender,metric,4,Math.min(maxMonth,24));
+    const uv=userPts.map(p=>p.value);
+    yMin=Math.min(yMin,...uv); yMax=Math.max(yMax,...uv);
+  } else {
+    const uv=userPts.map(p=>p.value);
+    yMin=Math.min(...uv); yMax=Math.max(...uv);
+  }
+  if(!isFinite(yMin)||!isFinite(yMax)){yMin=0;yMax=100;}
+  const pad=(yMax-yMin)*0.12||1;
+  yMin=Math.max(0,yMin-pad); yMax=yMax+pad;
+  const X=m=>P.l+cw*(m/maxMonth);
+  const Y=v=>P.t+ch-((v-yMin)/(yMax-yMin))*ch;
+  let svg='';
+  const ySteps=4;
+  for(let i=0;i<=ySteps;i++){
+    const y=P.t+ch*(i/ySteps);
+    const val=yMax-(yMax-yMin)*(i/ySteps);
+    svg+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#ECE0CC" stroke-width="1"/>`;
+    svg+=`<text x="${P.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="#9C8568">${val.toFixed(1)}</text>`;
+  }
+  if (useWho){
+    const top=[],bot=[];
+    for(let m=0;m<=Math.min(maxMonth,24);m+=0.5){
+      bot.push(`${X(m)},${Y(whoInterp(gender,metric,0,m))}`);
+      top.push(`${X(m)},${Y(whoInterp(gender,metric,4,m))}`);
+    }
+    svg+=`<polygon points="${top.reverse().join(' ')} ${bot.join(' ')}" fill="${color}" opacity="0.12"/>`;
+    [1,3].forEach(pi=>{
+      let path='';
+      for(let m=0;m<=Math.min(maxMonth,24);m+=0.5){ path+=(path?' L':'M')+X(m)+','+Y(whoInterp(gender,metric,pi,m)); }
+      svg+=`<path d="${path}" fill="none" stroke="${color}" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>`;
+    });
+    let p50='';
+    for(let m=0;m<=Math.min(maxMonth,24);m+=0.5){ p50+=(p50?' L':'M')+X(m)+','+Y(whoInterp(gender,metric,2,m)); }
+    svg+=`<path d="${p50}" fill="none" stroke="${color}" stroke-width="2" opacity="0.6"/>`;
+  }
+  let upath='';
+  userPts.forEach((p,i)=>{ upath+=(i?' L':'M')+X(p.month)+','+Y(p.value); });
+  svg+=`<path d="${upath}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  userPts.forEach(p=>{
+    svg+=`<circle cx="${X(p.month)}" cy="${Y(p.value)}" r="4.5" fill="#fff" stroke="${color}" stroke-width="2.5"><title>${p.date} ${title}: ${p.value}${unit}</title></circle>`;
+  });
+  [0,3,6,9,12,18,24].filter(m=>m<=maxMonth).forEach(m=>{
+    svg+=`<text x="${X(m)}" y="${H-12}" text-anchor="middle" font-size="9" fill="#9C8568">${m}月</text>`;
+  });
+  svg+=`<text x="${W-P.r-2}" y="${P.t+12}" text-anchor="end" font-size="11" font-weight="700" fill="${color}">${title} (${unit})</text>`;
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="margin-bottom:10px">${svg}</svg>`;
+}
 function renderGrowthChart() {
   const container = document.getElementById('growthChart');
   if (!container) return;
+  const birth = data.babyInfo.birthDate;
   const records = [...data.growthRecords].filter(r => r.height || r.weight).sort((a,b) => new Date(a.date) - new Date(b.date));
   if (records.length === 0) {
     container.innerHTML = '<p style="text-align:center;color:var(--text-l);padding:30px">暂无数据，打卡后将自动生成发育趋势图 📈</p>';
     return;
   }
-  const heights = records.filter(r => r.height).map(r => parseFloat(r.height));
-  const weights = records.filter(r => r.weight).map(r => parseFloat(r.weight));
-  const allVals = [...heights, ...weights];
-  if (allVals.length === 0) {
-    container.innerHTML = '<p style="text-align:center;color:var(--text-l);padding:30px">暂无数据</p>';
+  const wPts = records.filter(r=>r.weight).map(r=>({month:calcMonths(birth,r.date),value:parseFloat(r.weight),date:r.date})).filter(p=>p.month!==null && p.month>=0);
+  const hPts = records.filter(r=>r.height).map(r=>({month:calcMonths(birth,r.date),value:parseFloat(r.height),date:r.date})).filter(p=>p.month!==null && p.month>=0);
+  if (!wPts.length && !hPts.length) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-l);padding:14px">📌 在上方填写宝宝「出生日期」后，趋势图将以月龄为横轴，并叠加 WHO 标准曲线。</p>';
     return;
   }
-  const minV = Math.min(...allVals) * 0.9;
-  const maxV = Math.max(...allVals) * 1.1;
-  const W = 600, H = 240, P = {l:40, r:20, t:20, b:40};
-  const cw = W - P.l - P.r, ch = H - P.t - P.b;
-  const ySteps = 5;
-  let gridLines = '', yLabels = '';
-  for (let i=0; i<=ySteps; i++) {
-    const y = P.t + (ch/ySteps)*i;
-    const val = maxV - (maxV-minV)*(i/ySteps);
-    gridLines += `<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#E8DCC8" stroke-width="1"/>`;
-    yLabels += `<text x="${P.l-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#8D6E63">${val.toFixed(1)}</text>`;
+  let html = '';
+  if (wPts.length) html += drawMetricChart('weight','kg',wPts,'#7BA87B','⚖️ 体重');
+  if (hPts.length) html += drawMetricChart('height','cm',hPts,'#7B9EB8','📏 身高');
+  const gender = data.babyInfo.gender;
+  const useWho = (gender==='boy'||gender==='girl') && birth;
+  if (useWho) {
+    const last = wPts.length ? wPts[wPts.length-1] : hPts[hPts.length-1];
+    if (last) {
+      const metric = wPts.length ? 'weight' : 'height';
+      const unit = wPts.length ? 'kg' : 'cm';
+      const p3=whoInterp(gender,metric,0,last.month), p15=whoInterp(gender,metric,1,last.month),
+            p85=whoInterp(gender,metric,3,last.month), p97=whoInterp(gender,metric,4,last.month);
+      let status,color;
+      if (last.value<p3){status='低于 P3（偏轻/矮，建议关注）';color='var(--warning)';}
+      else if (last.value>p97){status='高于 P97（偏重/高，通常正常）';color='var(--info)';}
+      else if (last.value<p15){status='P3–P15 之间（略偏低）';color='var(--text-l)';}
+      else if (last.value>p85){status='P85–P97 之间（略偏高）';color='var(--text-l)';}
+      else {status='P15–P85 正常区间 ✅';color='#5B9279';}
+      html += `<div style="background:#F4F8F2;border-radius:12px;padding:12px;font-size:13px;color:var(--text);line-height:1.7">
+        📊 最新（${last.date}，约 ${last.month.toFixed(1)} 月）${metric==='weight'?'体重':'身高'} <strong>${last.value}${unit}</strong>：位于 ${status}。<br>
+        <span style="color:var(--text-l);font-size:12px">参考 WHO 儿童生长标准（0–24月），具体发育请遵从儿保医生评估。</span></div>`;
+    }
+  } else {
+    html += '<p style="text-align:center;color:var(--text-l);font-size:12px;padding:4px">💡 填写宝宝性别与出生日期，可叠加 WHO 标准百分位曲线</p>';
   }
-  // Height line
-  let heightPath = '', heightPoints = '';
-  const hRecords = records.filter(r => r.height);
-  if (hRecords.length > 0) {
-    hRecords.forEach((r, i) => {
-      const realI = records.indexOf(r);
-      const x = P.l + (cw/(records.length-1 || 1)) * realI;
-      const y = P.t + ch - ((parseFloat(r.height) - minV) / (maxV - minV)) * ch;
-      heightPoints += `<circle cx="${x}" cy="${y}" r="4" fill="#7B9EB8"><title>${r.date}: 身高${r.height}cm</title></circle>`;
-      if (i === 0) heightPath = `M${x},${y}`;
-      else heightPath += ` L${x},${y}`;
-    });
-  }
-  // Weight line
-  let weightPath = '', weightPoints = '';
-  const wRecords = records.filter(r => r.weight);
-  if (wRecords.length > 0) {
-    wRecords.forEach((r, i) => {
-      const realI = records.indexOf(r);
-      const x = P.l + (cw/(records.length-1 || 1)) * realI;
-      const y = P.t + ch - ((parseFloat(r.weight) - minV) / (maxV - minV)) * ch;
-      weightPoints += `<circle cx="${x}" cy="${y}" r="4" fill="#7BA87B"><title>${r.date}: 体重${r.weight}kg</title></circle>`;
-      if (i === 0) weightPath = `M${x},${y}`;
-      else weightPath += ` L${x},${y}`;
-    });
-  }
-  // X labels
-  let xTicks = '';
-  const labelCount = Math.min(6, records.length);
-  for (let i=0; i<labelCount; i++) {
-    const idx = Math.floor((records.length-1) * i/(labelCount-1 || 1));
-    const x = P.l + (cw/(records.length-1 || 1)) * idx;
-    xTicks += `<text x="${x}" y="${H-12}" text-anchor="middle" font-size="9" fill="#8D6E63">${records[idx].date.substring(5)}</text>`;
-  }
-  container.innerHTML = `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
-    ${gridLines}
-    ${heightPath ? `<path d="${heightPath}" fill="none" stroke="#7B9EB8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
-    ${heightPoints}
-    ${weightPath ? `<path d="${weightPath}" fill="none" stroke="#7BA87B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
-    ${weightPoints}
-    ${yLabels}
-    ${xTicks}
-    <line x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${P.t+ch}" stroke="#E8DCC8" stroke-width="1.5"/>
-    <line x1="${P.l}" y1="${P.t+ch}" x2="${W-P.r}" y2="${P.t+ch}" stroke="#E8DCC8" stroke-width="1.5"/>
-    <text x="${W-P.r-4}" y="${P.t+14}" text-anchor="end" font-size="11" fill="#7B9EB8">📏 身高(cm)</text>
-    <text x="${W-P.r-4}" y="${P.t+28}" text-anchor="end" font-size="11" fill="#7BA87B">⚖️ 体重(kg)</text>
-  </svg>`;
+  container.innerHTML = html;
 }
 
 // ============ BABY CHECKUP RECORDS ============
@@ -4375,6 +4489,12 @@ function openSettings() {
       <button class="btn btn-primary btn-block" onclick="bindOwnerToken()">🔑 绑定 / 校验云端账号</button>
       <button class="btn btn-outline btn-block" style="margin-top:8px" onclick="copyShareLink()">📋 复制家人只读链接</button>
     </div>
+    <div style="background:#EAF0F6;padding:12px;border-radius:10px;margin:12px 0">
+      <p style="font-weight:600;margin-bottom:6px">🔔 提醒通知</p>
+      <p style="font-size:12px;color:var(--text-l);margin-bottom:8px">开启后，产检、保质期、自定义提醒临近时将通过系统通知提醒你（每天汇总一次）。建议将本页面「添加到主屏幕」后通知更可靠。</p>
+      <button class="btn btn-primary btn-block" onclick="requestReminderPermission()">🔔 开启提醒通知</button>
+      <p style="font-size:11px;color:var(--text-l);margin-top:6px" id="notifyStatus"></p>
+    </div>
     <div style="background:#F5EDE0;padding:12px;border-radius:10px;margin:12px 0">
       <p style="font-size:12px;color:#9C7B4D">⚠️ 重置数据将清空所有记录并恢复默认清单，请谨慎操作。</p>
     </div>
@@ -4382,7 +4502,72 @@ function openSettings() {
     <button class="btn btn-danger btn-block" style="margin-top:8px" onclick="resetAllData()">🔄 重置全部数据</button>
     <button class="btn btn-outline btn-block" style="margin-top:8px" onclick="closeModal()">关闭</button>
   `;
+  const ns = document.getElementById('notifyStatus');
+  if (ns) {
+    if (!('Notification' in window)) ns.textContent = '当前浏览器不支持系统通知';
+    else if (Notification.permission === 'granted') ns.textContent = '✅ 通知已开启';
+    else if (Notification.permission === 'denied') ns.textContent = '⚠️ 已被拒绝，请在浏览器站点设置中允许';
+    else ns.textContent = '尚未开启，点击上方按钮开启';
+  }
   modal.classList.add('show');
+}
+
+// ============ 浏览器通知提醒 ============
+function requestReminderPermission() {
+  if (!('Notification' in window)) { showToast('当前浏览器不支持系统通知'); return; }
+  if (Notification.permission === 'granted') { showToast('✅ 通知已开启'); checkRemindersAndNotify(true); return; }
+  if (Notification.permission === 'denied') { showToast('⚠️ 通知已被拒绝，请在浏览器站点设置中允许'); return; }
+  Notification.requestPermission().then(p => {
+    if (p === 'granted') { showToast('✅ 提醒通知已开启'); checkRemindersAndNotify(true); }
+    else showToast('未授权通知');
+  });
+}
+function collectUrgentItems() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const in7 = new Date(today.getTime() + 7*864e5);
+  const items = [];
+  (data.checkups||[]).forEach(c => {
+    if (c.done) return;
+    const d = new Date(c.date); if (isNaN(d)) return;
+    if (d < today) items.push('产检已过期：'+c.item+'（'+c.date+'）');
+    else if (d <= in7) items.push('产检：'+c.item+'（'+c.date+'）');
+  });
+  (data.customReminders||[]).forEach(r => {
+    if (r.done) return;
+    const d = new Date(r.date); if (isNaN(d)) return;
+    if (d < today) items.push('提醒已过期：'+r.title+'（'+r.date+'）');
+    else if (d <= in7) items.push('提醒：'+r.title+'（'+r.date+'）');
+  });
+  const invTabs = ['doc','csec','fang','hospBaby','hospMom','homeBaby','homeMom','mom','baby'];
+  invTabs.forEach(tab => (data.inventory[tab]||[]).forEach(it => {
+    if (!it.expiryDate) return;
+    const days = Math.ceil((new Date(it.expiryDate) - today)/864e5);
+    if (days < 0) items.push('已过期：'+it.name+'（'+it.expiryDate+'）');
+    else if (days <= 30) items.push('临期：'+it.name+'（'+it.expiryDate+'）');
+  }));
+  if (typeof getAllSpendKeys === 'function') {
+    getAllSpendKeys().forEach(k => (data.spending[k]||[]).forEach(it => {
+      if (!it.expiryDate) return;
+      const days = Math.ceil((new Date(it.expiryDate) - today)/864e5);
+      if (days < 0) items.push('已过期：'+it.name+'（'+it.expiryDate+'）');
+      else if (days <= 30) items.push('临期：'+it.name+'（'+it.expiryDate+'）');
+    }));
+  }
+  return items;
+}
+function checkRemindersAndNotify(force) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const last = localStorage.getItem('babyLastNotify');
+  if (last === todayStr && !force) return;
+  const items = collectUrgentItems();
+  if (items.length === 0) { localStorage.setItem('babyLastNotify', todayStr); return; }
+  const body = '您有 '+items.length+' 项提醒待处理：\n' + items.slice(0,5).join('\n') + (items.length>5 ? '\n…等' : '');
+  try {
+    const n = new Notification('👶 宝宝工作台提醒', { body: body, tag: 'baby-reminder-'+todayStr });
+    n.onclick = () => { try { window.focus(); } catch(e){} n.close(); };
+  } catch(e) {}
+  localStorage.setItem('babyLastNotify', todayStr);
 }
 
 function saveSettings() {
@@ -4475,6 +4660,7 @@ loadData();
   saveData(); // persist recovered data back to localStorage too
   if (CLOUD.readonly) { applyReadonlyUI(); cloudSetStatus('readonly'); }
   else if (CLOUD.status !== 'offline') cloudSetStatus('online');
+  if (!CLOUD.readonly) checkRemindersAndNotify();
   // 未绑定云端账号的管理模式设备：提示绑定，否则修改只存本地
   const bindEl = document.getElementById('cloudBindBanner');
   if (bindEl && !CLOUD.readonly && !CLOUD.ownerToken) bindEl.style.display = 'block';
