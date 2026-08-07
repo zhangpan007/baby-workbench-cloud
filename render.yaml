@@ -14,5 +14,4 @@ services:
       - key: NODE_VERSION
         value: "22"
       - key: OWNER_TOKEN
-        sync: false
         generateValue: true
