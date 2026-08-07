@@ -4441,9 +4441,9 @@ setInterval(() => {
 // ============ INIT ============
 loadData();
 (async function boot() {
-  // 决定模式：带 ?view / ?readonly 参数，或未持有管理口令 -> 家人只读
+  // 决定模式：只有 URL 带 ?view=1 / ?readonly 参数才是家人只读；未绑定口令时仍可在本地编辑，并通过横幅提示绑定
   const params = new URLSearchParams(location.search);
-  CLOUD.readonly = params.has('view') || params.has('readonly') || !CLOUD.ownerToken;
+  CLOUD.readonly = params.get('view') === '1' || params.has('readonly');
 
   // Recover from the durable IndexedDB mirror if localStorage was wiped
   // (e.g. WeChat/webview cleared cache on restart).
