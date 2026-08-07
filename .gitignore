@@ -1,0 +1,15 @@
+# 运行时日志
+*.log
+server.log
+
+# 云端运行时数据（部署后由服务端自动创建，不入库）
+data/store.json
+
+# 依赖（零依赖项目，无 node_modules，仅作保险）
+node_modules/
+
+# 操作系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

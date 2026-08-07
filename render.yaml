@@ -1,0 +1,18 @@
+# Render.com 一键部署配置（免费 Web Service，永久公网链接）
+# 部署后请到 Dashboard -> Environment 查看自动生成的 OWNER_TOKEN，并在 App 内「设置 → 云端账号」绑定。
+services:
+  - type: web
+    name: baby-workbench-cloud
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: "echo skip-build"
+    startCommand: "node server.js"
+    healthCheckPath: /api/status
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: OWNER_TOKEN
+        sync: false
+        generateValue: true

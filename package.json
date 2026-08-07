@@ -1,0 +1,13 @@
+{
+  "name": "baby-workbench-cloud",
+  "version": "1.0.0",
+  "description": "宝宝工作台 · 云端实时同步版（零依赖 Node 后端 + 只读分享）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}
