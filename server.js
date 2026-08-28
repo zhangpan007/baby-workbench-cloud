@@ -22,6 +22,7 @@
  */
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -103,21 +104,40 @@ function decryptStr(str) {
 }
 
 // ---------------- GitHub Contents API ----------------
-// 关键加固：给外网请求加超时。Render 免费版对 api.github.com 的请求可能
-// 挂起（不返回也不报错），一旦挂起，串行队列会被永久堵死，导致后续所有写入
-// 都不执行（表现为内存有数据、GitHub 永远 404）。超时后 AbortController 抛错，
-// 被 _githubWriteOnce 的 catch 捕获并解除阻塞。
-async function githubApi(method, body, timeoutMs = 8000) {
-  const url = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_DATA_PATH;
-  const ac = new AbortController();
-  const timer = setTimeout(() => ac.abort(), timeoutMs);
-  const opts = { method, headers: GH_HEADERS, signal: ac.signal };
-  if (body) opts.body = JSON.stringify(body);
-  try {
-    return await fetch(url, opts);
-  } finally {
-    clearTimeout(timer);
-  }
+// 关键加固：不使用全局 fetch / undici（在 Render 等受限环境对 api.github.com
+// 的请求可能永久挂起且 AbortController 无法及时中断，常见原因是 IPv6 解析死连）。
+// 改用原生 https 模块，强制 IPv4（family:4）并设硬性 8 秒 socket 超时，确保
+// 任何情况下请求都会以失败或成功收尾，绝不会无限挂起堵死串行写入队列。
+const GH_TIMEOUT_MS = 8000;
+function githubApi(method, body) {
+  return new Promise((resolve, reject) => {
+    const payload = body ? JSON.stringify(body) : null;
+    const headers = Object.assign({}, GH_HEADERS);
+    if (payload) headers['Content-Length'] = Buffer.byteLength(payload);
+    const req = https.request({
+      hostname: 'api.github.com',
+      path: '/repos/' + GITHUB_REPO + '/contents/' + GITHUB_DATA_PATH,
+      method: method,
+      family: 4, // 强制 IPv4，规避 IPv6 死连
+      headers: headers
+    }, (res) => {
+      let buf = '';
+      res.setEncoding('utf8');
+      res.on('data', (c) => { buf += c; });
+      res.on('end', () => {
+        resolve({
+          status: res.statusCode,
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          json: () => Promise.resolve(buf ? JSON.parse(buf) : {}),
+          text: () => Promise.resolve(buf)
+        });
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(GH_TIMEOUT_MS, () => { req.destroy(new Error('GitHub request timeout')); });
+    if (payload) req.write(payload);
+    req.end();
+  });
 }
 
 let githubSha = null; // 当前文件 SHA，用于更新时避免 409 冲突
