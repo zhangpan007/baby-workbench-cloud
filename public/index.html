@@ -15,28 +15,28 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
 <style>
 :root{
-  --bg:#F7F5FB;--bg-grad:linear-gradient(175deg,#F7F5FB 0%,#F3F0F9 55%,#EFEAF6 100%);
-  --card:#FFFFFF;--primary:#C3AEDC;--primary-d:#7C64A6;--primary-l:#F1ECF8;
-  --accent:#BBA6D9;--text:#4B4458;--text-l:#9B93AA;--text-h:#C0B9CD;--border:#E9E3F2;
-  --success:#8FBF9A;--warning:#DFB26B;--danger:#D98A94;--info:#96B4D8;
-  --milk-green:#B4D4B8;--milk-green-d:#8FBB96;--coffee:#C3AEDC;--coffee-d:#8F7AB4;
-  --cloud:#E3DCF0;--cloud-hi:#F4F1FA;
-  --pink:#EDC9D8;--pink-d:#C99AAD;--lav:#C3AEDC;--mint:#AED4BC;--sun:#EFD9A0;
-  --shadow:0 2px 12px rgba(92,80,134,.07);--shadow-lg:0 8px 28px rgba(92,80,134,.11);
-  --radius:20px;
+  --bg:#FFF9F2;--bg-grad:linear-gradient(175deg,#FFF9F2 0%,#FFF3EC 55%,#FDEBE9 100%);
+  --card:#FFFFFF;--primary:#F2B6B0;--primary-d:#D98F8A;--primary-l:#FDF0EE;
+  --accent:#A9C6E8;--text:#4C4650;--text-l:#A49AA8;--text-h:#C9BFCD;--border:#F4E6E0;
+  --success:#9CC8AC;--warning:#E8C08A;--danger:#E8A9A4;--info:#A9C8E8;
+  --milk-green:#CBE3CF;--milk-green-d:#9CC8AC;--coffee:#F2B6B0;--coffee-d:#D98F8A;
+  --cloud:#F7E8E2;--cloud-hi:#FFF7F2;
+  --pink:#F8D9D7;--pink-d:#E0A9A8;--lav:#E3CFF0;--mint:#C6E4D8;--sun:#F7E4BC;
+  --shadow:0 2px 12px rgba(180,140,128,.08);--shadow-lg:0 8px 28px rgba(180,140,128,.13);
+  --radius:22px;
   --font-cute:"LXGW WenKai Screen","LXGW WenKai",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
   /* 分类专属色 */
-  --c-dash:#8B7BB8;--c-inv:#5FAE94;--c-checkup:#D98AA0;--c-babycheck:#7CA6D9;
-  --c-expiry:#DEA25E;--c-newborn:#A982D9;--c-knowledge:#D9B45E;--c-growth:#4FBBA8;
-  --c-spend:#E08A94;--c-remind:#C98AC9;--c-import:#8FA8D9;--c-share:#6FBF8F;
-  --c-settings:#A8A0C8;--c-export:#B08FD9;
+  --c-dash:#D9A8C8;--c-inv:#9CC8AC;--c-checkup:#E8B4B4;--c-babycheck:#A8C6E8;
+  --c-expiry:#E8C79A;--c-newborn:#C9A8E0;--c-knowledge:#E0CF9A;--c-growth:#9AD4C6;
+  --c-spend:#E8A8B4;--c-remind:#D4A8D9;--c-import:#A8B8E0;--c-share:#A8D9B0;
+  --c-settings:#B8B0D0;--c-export:#C8A8E0;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{font-family:var(--font-cute);background:var(--bg-grad);color:var(--text);line-height:1.65;transition:margin .3s;font-size:15px;-webkit-text-size-adjust:100%;min-height:100vh}
 button{cursor:pointer;border:none;outline:none;font-family:inherit;touch-action:manipulation}
 input,textarea,select{font-family:inherit}
-.nav-item,.inv-tab,.inv-item .check,.checklist-item .cl-check{touch-action:manipulation}
+.inv-tab,.inv-item .check,.checklist-item .cl-check{touch-action:manipulation}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--coffee-d));border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--primary-d)}
@@ -44,56 +44,90 @@ input,textarea,select{font-family:inherit}
 ::selection{background:rgba(195,174,220,.35);color:#3E3852}
 
 /* Top bar — visible on ALL screen sizes */
-.topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.88);color:var(--text);padding:12px 16px;align-items:center;gap:12px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 2px 10px rgba(92,80,134,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(233,227,242,.9);overflow:hidden}
+.topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,251,247,.9);color:var(--text);padding:12px 16px;align-items:center;justify-content:center;gap:8px;box-shadow:0 1px 0 rgba(0,0,0,.02),0 2px 10px rgba(180,140,128,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(244,230,224,.9);overflow:hidden}
 .topbar-deco{display:none}
-.menu-toggle{background:var(--primary-l);border-radius:12px;width:40px;height:40px;font-size:20px;color:var(--primary-d);display:flex;align-items:center;justify-content:center;touch-action:manipulation;transition:all .2s}
-.menu-toggle:active{transform:scale(.92);background:var(--primary)}
-.topbar-title{font-size:18px;font-weight:700;letter-spacing:1.5px;color:var(--text);font-family:var(--font-cute)}
-.topbar-title .tb-icon{font-size:20px;vertical-align:middle;margin-right:5px;opacity:.85}
+.topbar-title{font-size:17px;font-weight:700;letter-spacing:1px;color:var(--text);font-family:var(--font-cute);display:flex;align-items:center;gap:6px}
+.topbar-title .tb-icon{font-size:19px;vertical-align:middle;opacity:.9}
+.topbar-sub{font-size:11px;color:var(--text-l);letter-spacing:.5px;font-weight:500;margin-top:1px}
 
-/* Sidebar — drawer mode, hidden by default on ALL screens */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;background:var(--card);border-right:1px solid var(--border);z-index:200;display:flex;flex-direction:column;box-shadow:8px 0 40px rgba(92,80,134,.12);transform:translateX(-100%);transition:transform .3s ease}
-.sidebar.open{transform:translateX(0)}
-/* Overlay — works on ALL screen sizes */
-.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(60,52,88,.20);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:150;display:none}
-.sidebar-overlay.show{display:block}
-.sidebar-header{position:relative;padding:24px 16px;text-align:center;border-bottom:1px solid var(--border);background:#F7F5FB;overflow:hidden}
-.sidebar-header .logo{font-size:18px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;justify-content:center;position:relative}
-.sidebar-header .subtitle{font-size:12px;color:var(--text-l);margin-top:6px;position:relative}
-.nav{flex:1;overflow-y:auto;padding:12px 8px}
-.nav-item{--nc:var(--c-dash);display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:14px;color:var(--text);text-decoration:none;font-size:15px;margin-bottom:3px;transition:all .15s;cursor:pointer;touch-action:manipulation}
-.nav-item[data-view="inventory"]{--nc:var(--c-inv)}
-.nav-item[data-view="checkup"]{--nc:var(--c-checkup)}
-.nav-item[data-view="babycheck"]{--nc:var(--c-babycheck)}
-.nav-item[data-view="expiry"]{--nc:var(--c-expiry)}
-.nav-item[data-view="newborn"]{--nc:var(--c-newborn)}
-.nav-item[data-view="knowledge"]{--nc:var(--c-knowledge)}
-.nav-item[data-view="growth"]{--nc:var(--c-growth)}
-.nav-item[data-view="spending"]{--nc:var(--c-spend)}
-.nav-item[data-view="reminders"]{--nc:var(--c-remind)}
-.nav-item[data-view="import"]{--nc:var(--c-import)}
-.nav-item[data-view="share"]{--nc:var(--c-share)}
-.nav-item[data-view="settings"]{--nc:var(--c-settings)}
-.nav-item[data-view="export"]{--nc:var(--c-export)}
-.nav-item:hover{background:var(--primary-l)}
-.nav-item.active{background:var(--primary-l);color:var(--nc);font-weight:600;box-shadow:inset 0 0 0 1px var(--border)}
-@supports (background:color-mix(in srgb,red,white)){
-  .nav-item:hover{background:color-mix(in srgb,var(--nc) 10%,#fff)}
-  .nav-item.active{background:color-mix(in srgb,var(--nc) 10%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--nc) 32%,transparent)}
-}
-.nav-item .icon{font-size:16px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;background:color-mix(in srgb,var(--nc) 12%,#fff);color:var(--nc);transition:transform .15s;flex-shrink:0}
-.nav-item:hover .icon{transform:scale(1.1) rotate(-4deg)}
-/* Nav group headers */
-.nav-group{margin-bottom:6px}
-.nav-group-header{font-size:11px;font-weight:700;color:var(--text-l);text-transform:uppercase;letter-spacing:.5px;padding:16px 16px 6px;display:flex;align-items:center;gap:6px}
-.nav-group-header::after{content:"";flex:1;height:1px;background:var(--border);margin-left:6px}
-.nav-group+.nav-group{border-top:1px solid var(--border);padding-top:6px;margin-top:10px}
-/* Close button in sidebar header */
-.sidebar-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.75);border-radius:10px;width:34px;height:34px;font-size:18px;color:var(--primary-d);display:flex;align-items:center;justify-content:center;touch-action:manipulation;box-shadow:0 2px 8px rgba(170,120,80,.15);transition:all .2s}
-.sidebar-close:hover{background:var(--primary);color:#fff}
+/* ===== 奶油风背景纹理（8% 极低透明度，仅氛围） ===== */
+body{position:relative}
+body::before,body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07}
+body::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='170' viewBox='0 0 240 170'%3E%3Cpath d='M42,96 C26,96 18,82 30,73 C25,60 44,55 52,64 C58,50 82,53 84,68 C100,66 102,86 88,90 C92,100 72,102 61,94 C55,100 47,102 42,96 Z' fill='%23D98F8A'/%3E%3Ccircle cx='178' cy='40' r='6' fill='%23A9C6E8'/%3E%3Ccircle cx='192' cy='40' r='6' fill='%23A9C6E8'/%3E%3Ccircle cx='185' cy='34' r='6' fill='%23A9C6E8'/%3E%3Cellipse cx='185' cy='52' rx='10' ry='7' fill='%23A9C6E8'/%3E%3Cpath d='M110,140 C96,140 89,128 99,120 C95,109 111,105 118,113 C123,101 144,104 145,117 C159,115 161,132 149,135 C152,144 135,146 125,139 C120,144 114,146 110,140 Z' fill='%23E0A9A8'/%3E%3C/svg%3E");background-size:300px 220px;background-repeat:repeat}
+body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='120' viewBox='0 0 160 120'%3E%3Cg fill='%23E8C79A'%3E%3Cellipse cx='30' cy='88' rx='7' ry='10'/%3E%3Ccircle cx='23' cy='76' r='2.6'/%3E%3Ccircle cx='30' cy='73' r='2.9'/%3E%3Ccircle cx='37' cy='76' r='2.4'/%3E%3Ccircle cx='39' cy='81' r='2.2'/%3E%3Ccircle cx='21' cy='82' r='2'/%3E%3C/g%3E%3Cg fill='%23C6E4D8'%3E%3Cellipse cx='130' cy='30' rx='7' ry='10'/%3E%3Ccircle cx='123' cy='18' r='2.6'/%3E%3Ccircle cx='130' cy='15' r='2.9'/%3E%3Ccircle cx='137' cy='18' r='2.4'/%3E%3Ccircle cx='139' cy='23' r='2.2'/%3E%3Ccircle cx='121' cy='24' r='2'/%3E%3C/g%3E%3C/svg%3E");background-size:260px 190px;background-repeat:repeat}
+
+/* ===== 首页仪表盘 ===== */
+.home-hero{position:relative;background:linear-gradient(150deg,#FFF6EF,#FDEAE6);border:1px solid #F6DDD6;border-radius:26px;padding:26px 22px;text-align:center;margin-bottom:18px;box-shadow:var(--shadow);overflow:hidden}
+.home-hero::before{content:"";position:absolute;right:-46px;top:-46px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(242,182,176,.25),transparent 70%)}
+.home-hero::after{content:"";position:absolute;left:-40px;bottom:-56px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(169,198,232,.18),transparent 70%)}
+.home-hero>*{position:relative;z-index:1}
+.home-hero .hh-kicker{font-size:13px;color:var(--text-l);letter-spacing:2px;margin-bottom:6px}
+.home-hero .hh-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:2px;letter-spacing:1px}
+.home-hero .hh-days{font-size:52px;font-weight:800;line-height:1.15;color:var(--primary-d);font-family:var(--font-cute);margin:6px 0 2px;letter-spacing:1px}
+.home-hero .hh-days .unit{font-size:16px;font-weight:600;margin-left:2px}
+.home-hero .hh-meta{font-size:13px;color:var(--text-l);margin-top:8px}
+.home-hero .hh-week{display:inline-block;margin-top:10px;background:#fff;border:1px solid #F6DDD6;border-radius:20px;padding:5px 14px;font-size:13px;color:var(--primary-d);font-weight:600}
+/* 筹备进度 */
+.prep-progress{background:var(--card);border-radius:22px;padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px}
+.prep-progress .pp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.prep-progress .pp-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.prep-progress .pp-title .ico{font-size:16px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:var(--primary-l);border-radius:10px}
+.prep-progress .pp-pct{font-size:15px;font-weight:800;color:var(--primary-d)}
+.prep-progress .pp-bar{background:var(--primary-l);border-radius:20px;height:12px;overflow:hidden;position:relative}
+.prep-progress .pp-fill{background:linear-gradient(90deg,#F2B6B0,#D98F8A);border-radius:20px;height:100%;transition:width .8s ease}
+.prep-progress .pp-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--text-l);margin-top:6px}
+/* 暖心提醒（柔和浅橙） */
+.warm-remind{background:linear-gradient(165deg,#FFF7EE,#FFEFDD);border:1px solid #F6DFC0;border-radius:22px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:18px}
+.warm-remind .wr-title{font-size:15px;font-weight:700;color:#B98A4E;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.warm-remind .wr-title .ico{font-size:16px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:#FCEED8;border-radius:10px}
+.warm-remind .wr-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.6);border:1px solid #F6E3CB;margin-bottom:8px;cursor:pointer;transition:transform .16s,box-shadow .16s}
+.warm-remind .wr-item:last-child{margin-bottom:0}
+.warm-remind .wr-item:active{transform:scale(.98)}
+.warm-remind .wr-item .wr-ico{font-size:16px;width:32px;height:32px;flex:none;display:inline-flex;align-items:center;justify-content:center;background:#FFF3E0;border-radius:10px}
+.warm-remind .wr-item .wr-text{font-size:13.5px;color:var(--text);flex:1;line-height:1.35}
+.warm-remind .wr-item .wr-days{font-size:12.5px;font-weight:700;color:#C98A4B;flex:none}
+.warm-remind .wr-item .wr-days.hot{color:#E07A5F}
+.warm-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.75);border:1px solid #F6E2C8;margin-bottom:8px}
+.warm-item:last-child{margin-bottom:0}
+.warm-item .wi-ico{font-size:16px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;flex-shrink:0}
+.warm-item .wi-info{flex:1;min-width:0}
+.warm-item .wi-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.warm-item .wi-sub{font-size:12px;color:var(--text-l);margin-top:1px}
+.warm-item .wi-days{font-size:13px;font-weight:700;color:#D99A56;white-space:nowrap}
+.warm-item .wi-days.today{color:var(--danger)}
+/* 快捷卡片 */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quick-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s,box-shadow .18s;overflow:hidden;text-align:left}
+.quick-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.quick-card .qc-ico{font-size:22px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:14px;margin-bottom:8px}
+.quick-card .qc-name{font-size:14px;font-weight:700;color:var(--text);display:block}
+.quick-card .qc-sub{font-size:12px;color:var(--text-l);margin-top:2px;display:block}
+/* ===== 功能收纳页 ===== */
+.feature-page{max-width:640px;margin:0 auto}
+.feature-hero{text-align:center;padding:10px 0 4px;margin-bottom:6px}
+.feature-hero .fh-emoji{font-size:40px;display:block;margin-bottom:8px}
+.feature-hero .fh-title{font-size:20px;font-weight:800;color:var(--text);font-family:var(--font-cute);letter-spacing:1px}
+.feature-hero .fh-sub{font-size:13px;color:var(--text-l);margin-top:4px;letter-spacing:.5px}
+.feature-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}
+.feature-card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.feature-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.feature-card::after{content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--text-h)}
+.feature-card .fc-ico{font-size:22px;width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;border-radius:15px;flex-shrink:0}
+.feature-card .fc-info{flex:1;min-width:0}
+.feature-card .fc-name{font-size:15px;font-weight:700;color:var(--text)}
+.feature-card .fc-sub{font-size:12px;color:var(--text-l);margin-top:2px}
+.feature-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;padding-top:16px;border-top:1px dashed var(--border)}
+.feature-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 8px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s;font-size:12px;color:var(--text-l)}
+.feature-action:hover{transform:translateY(-2px)}
+.feature-action .fa-ico{font-size:20px}
+/* 子功能返回条 */
+.sub-back{display:flex;align-items:center;gap:8px;margin:0 auto 12px;max-width:560px;padding:4px 2px}
+.sub-back button{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:30px;padding:7px 14px;font-size:13px;color:var(--text-l);transition:all .18s;box-shadow:var(--shadow)}
+.sub-back button:hover{color:var(--primary-d);border-color:var(--primary)}
+.sub-back .sb-crumb{font-size:13px;color:var(--text-h);margin-left:auto}
 
 /* Main content */
-.main-content{padding:28px;padding-top:96px;padding-bottom:32px;min-height:100vh}
+.main-content{position:relative;z-index:1;padding:28px;padding-top:96px;padding-bottom:40px;min-height:100vh;max-width:920px;margin:0 auto}
 .view{display:none;animation:fadeIn .3s}
 .view.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -428,8 +462,9 @@ input[type="date"]:focus,input[type="datetime-local"]:focus{border-color:var(--p
   .sidebar-header .logo{font-size:17px}
   .sidebar-header .subtitle{font-size:12px;margin-top:4px}
   .sidebar-close{width:34px;height:34px;font-size:18px;top:12px;right:12px}
-  .nav-item{font-size:15px;padding:12px 14px;gap:10px;margin-bottom:2px;border-radius:12px}
-  .nav-item .icon{font-size:15px;width:26px;height:26px;border-radius:8px}
+  .sub-back button{padding:6px 12px;font-size:12px}
+  .quick-card{padding:14px 12px}
+  .quick-card .qc-ico{width:38px;height:38px;font-size:20px}
   .nav-group-header{font-size:11px;padding:12px 14px 6px}
   .nav{padding:8px 6px}
   /* Main content: tight padding, hide page illustration to save space */
@@ -605,13 +640,16 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 @media(max-width:768px){
   .bottom-tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(92,80,134,.07);padding-bottom:env(safe-area-inset-bottom)}
   .btab{--nc:var(--c-dash);flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;background:none;border:none;color:var(--text-l);font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;transition:color .15s}
-  .btab[data-view="inventory"]{--nc:var(--c-inv)}
-  .btab[data-view="growth"]{--nc:var(--c-growth)}
-  .btab[data-view="spending"]{--nc:var(--c-spend)}
-  .btab .btab-ico{font-size:20px;line-height:1;transition:transform .15s}
+  .btab[data-tab="prepare"]{--nc:var(--c-inv)}
+  .btab[data-tab="mom"]{--nc:var(--c-checkup)}
+  .btab[data-tab="baby"]{--nc:var(--c-growth)}
+  .btab[data-tab="family"]{--nc:var(--c-spend)}
+  .btab .btab-ico{width:22px;height:22px;display:block;margin:0 auto;transition:transform .15s;color:currentColor}
+  .btab .btab-sub{font-size:9px;color:var(--text-h);letter-spacing:.3px;line-height:1.2}
+  .btab.active .btab-sub{color:var(--nc)}
   .btab.active{color:var(--nc);font-weight:600}
   .btab.active .btab-ico{transform:translateY(-1px)}
-  .btab.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:3px;border-radius:0 0 4px 4px;background:var(--nc)}
+  .btab.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:22px;height:3px;border-radius:0 0 6px 6px;background:var(--nc);opacity:.85}
   .main-content{padding-bottom:84px}
 }
 </style>
@@ -620,182 +658,109 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
 <!-- Top bar — visible on ALL screen sizes -->
 <div class="topbar">
-  <div class="topbar-deco" aria-hidden="true">
-    <svg class="deco deco-heart" style="top:5px;left:8px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,21 C12,21 3,15.5 3,9 C3,6 5.2,4 7.8,4 C9.8,4 11.3,5.2 12,6.5 C12.7,5.2 14.2,4 16.2,4 C18.8,4 21,6 21,9 C21,15.5 12,21 12,21 Z"/></svg>
-    <svg class="deco deco-star" style="top:7px;right:10px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2 L14.9,8.3 L21.8,9 L16.6,13.8 L18.1,20.6 L12,17.1 L5.9,20.6 L7.4,13.8 L2.2,9 L9.1,8.3 Z"/></svg>
-    <svg class="deco deco-foot" style="bottom:4px;left:48px" viewBox="0 0 24 32"><g fill="currentColor"><ellipse cx="12" cy="19" rx="6.5" ry="10"/><circle cx="7.5" cy="8" r="2.2"/><circle cx="12.5" cy="6" r="2.4"/><circle cx="17.5" cy="8" r="2"/><circle cx="19" cy="12" r="1.9"/><circle cx="6" cy="13" r="1.7"/></g></svg>
-    <svg class="deco deco-star sm" style="bottom:6px;right:42px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2 L14.9,8.3 L21.8,9 L16.6,13.8 L18.1,20.6 L12,17.1 L5.9,20.6 L7.4,13.8 L2.2,9 L9.1,8.3 Z"/></svg>
-  </div>
-  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-  <span class="topbar-title"><span class="tb-icon">👶</span>宝宝工作台</span>
+  <span class="topbar-title"><span class="tb-icon">👶</span>我们的小宝贝</span>
   <span class="cloud-status cs-init" id="cloudStatus">☁️ 连接中…</span>
 </div>
 <div id="readonlyBanner">👀 家人只读视图 · 数据由管理员实时同步，无法修改</div>
 <div id="cloudBindBanner" onclick="openSettings()">🔑 本机尚未绑定云端账号，修改仅存本地 · 点此绑定，电脑与 Safari 实时同步</div>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
 
-<!-- Sidebar — drawer, hidden by default -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <button class="sidebar-close" onclick="toggleSidebar(false)">✕</button>
-    <div class="logo">👶 宝宝工作台</div>
-    <div class="subtitle">数据本地永久保存</div>
-  </div>
-  <nav class="nav">
-    <!-- 第一组：首页 -->
-    <div class="nav-group">
-      <div class="nav-group-header"><span>首页</span></div>
-      <a class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
-        <span class="icon">📊</span> 宝宝工作台
-      </a>
-    </div>
-
-    <!-- 第二组：孕期管理 -->
-    <div class="nav-group">
-      <div class="nav-group-header"><span>孕期管理</span></div>
-      <a class="nav-item" data-view="inventory" onclick="switchView('inventory')">
-        <span class="icon">📦</span> 待产物资台账
-      </a>
-      <a class="nav-item" data-view="checkup" onclick="switchView('checkup')">
-        <span class="icon">👩</span> 宝妈产检台账
-      </a>
-      <a class="nav-item" data-view="babycheck" onclick="switchView('babycheck')">
-        <span class="icon">👶</span> 宝宝检查&疫苗接种
-      </a>
-      <a class="nav-item" data-view="expiry" onclick="switchView('expiry')">
-        <span class="icon">⏰</span> 保质期提醒
-      </a>
-      <a class="nav-item" data-view="newborn" onclick="switchView('newborn')">
-        <span class="icon">🍼</span> 新生儿规划
-      </a>
-      <a class="nav-item" data-view="knowledge" onclick="switchView('knowledge')">
-        <span class="icon">📚</span> 育儿知识库
-      </a>
-    </div>
-
-    <!-- 第三组：成长台账 -->
-    <div class="nav-group">
-      <div class="nav-group-header"><span>成长台账</span></div>
-      <a class="nav-item" data-view="growth" onclick="switchView('growth')">
-        <span class="icon">📏</span> 宝宝成长档案
-      </a>
-      <a class="nav-item" data-view="spending" onclick="switchView('spending')">
-        <span class="icon">💰</span> 宝宝成长花销
-      </a>
-      <a class="nav-item" data-view="reminders" onclick="switchView('reminders')">
-        <span class="icon">⏰</span> 自定义提醒
-      </a>
-      <a class="nav-item" data-view="import" onclick="navAction('import')">
-        <span class="icon">📂</span> 导入数据
-      </a>
-      <a class="nav-item" data-view="share" onclick="navAction('share')">
-        <span class="icon">🔗</span> 分享给家人
-      </a>
-      <a class="nav-item" data-view="settings" onclick="navAction('settings')">
-        <span class="icon">⚙️</span> 设置
-      </a>
-      <a class="nav-item" data-view="export" onclick="navAction('export')">
-        <span class="icon">💾</span> 导出数据
-      </a>
-    </div>
-  </nav>
-  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-</aside>
 
 <!-- Main content -->
 <main class="main-content">
 
-  <!-- ===== Dashboard ===== -->
-  <section class="view active" id="view-dashboard">
-    <div class="dash-hero">
-      <div class="dash-deco" aria-hidden="true">
-        <svg class="deco deco-cloud" style="top:8px;left:10px" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        <svg class="deco deco-cloud" style="top:10px;right:12px" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        <svg class="deco deco-cloud" style="bottom:8px;left:12px" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        <svg class="deco deco-cloud" style="bottom:10px;right:10px" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        <svg class="deco deco-heart" style="top:24%;right:30px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,21 C12,21 3,15.5 3,9 C3,6 5.2,4 7.8,4 C9.8,4 11.3,5.2 12,6.5 C12.7,5.2 14.2,4 16.2,4 C18.8,4 21,6 21,9 C21,15.5 12,21 12,21 Z"/></svg>
-        <svg class="deco deco-star" style="top:16%;right:74px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2 L14.9,8.3 L21.8,9 L16.6,13.8 L18.1,20.6 L12,17.1 L5.9,20.6 L7.4,13.8 L2.2,9 L9.1,8.3 Z"/></svg>
-        <svg class="deco deco-star sm" style="bottom:30%;right:26px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2 L14.9,8.3 L21.8,9 L16.6,13.8 L18.1,20.6 L12,17.1 L5.9,20.6 L7.4,13.8 L2.2,9 L9.1,8.3 Z"/></svg>
-        <svg class="deco deco-heart sm" style="top:58%;right:16px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,21 C12,21 3,15.5 3,9 C3,6 5.2,4 7.8,4 C9.8,4 11.3,5.2 12,6.5 C12.7,5.2 14.2,4 16.2,4 C18.8,4 21,6 21,9 C21,15.5 12,21 12,21 Z"/></svg>
-      </div>
-      <h1><span class="hero-icon">👶</span>迎接小宝贝<span id="welcomeName"></span></h1>
-      <div class="due-date">预产期：<span id="dueDateDisplay">2026年10月26日</span> ｜ 计划剖腹产：<span id="csectionDateDisplay">2026年10月16日</span></div>
-      <div class="dash-countdown">
-        <div class="dash-countdown-item">
-          <div class="num" id="currentWeek">--</div>
-          <div class="label">当前孕周（周）</div>
-        </div>
-        <div class="dash-countdown-item">
-          <div class="num" id="daysToCsection">--</div>
-          <div class="label">距剖腹产手术（天）</div>
-        </div>
-        <div class="dash-countdown-item">
-          <div class="num" id="daysLeft">--</div>
-          <div class="label">距预产期（天）</div>
-        </div>
-        <div class="dash-countdown-item">
-          <div class="num" id="daysPreg">--</div>
-          <div class="label">已怀孕（天）</div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>胎儿发育进度</span>
-          <span id="progressText">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill" style="width:0%"></div>
-        </div>
-      </div>
+  <!-- ===== Home 我们的小宝贝 ===== -->
+  <section class="view active" id="view-home">
+    <!-- 倒计时 -->
+    <div class="home-hero">
+      <div class="hh-kicker">✨ 我们的小宝贝</div>
+      <div class="hh-title">距离和小宝贝见面还有</div>
+      <div class="hh-days"><span id="homeDaysLeft">--</span><span class="unit">天</span></div>
+      <div class="hh-meta">预产期 <span id="homeDueDate">2026年10月26日</span><span id="homeCsecWrap" style="display:none"> · 计划剖腹产 <span id="homeCsecDate"></span></span></div>
+      <div class="hh-week" id="homeWeek">第 -- 周</div>
     </div>
 
-    <div class="dash-grid" style="margin-bottom:18px">
-      <div class="tip-card">
-        <div class="tip-deco" aria-hidden="true">
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        </div>
-        <h3>🤰 本周孕妈身体变化</h3>
-        <p id="tipBody">加载中...</p>
+    <!-- 全家为爱筹备进度 -->
+    <div class="prep-progress">
+      <div class="pp-head">
+        <div class="pp-title"><span class="ico">🎀</span> 全家为爱筹备进度</div>
+        <div class="pp-pct" id="prepPct">0%</div>
       </div>
-      <div class="tip-card">
-        <div class="tip-deco" aria-hidden="true">
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        </div>
-        <h3>👶 宝宝发育特点</h3>
-        <p id="tipBaby">加载中...</p>
-      </div>
-      <div class="tip-card labor">
-        <div class="tip-deco" aria-hidden="true">
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-          <svg class="tip-cloud" viewBox="0 0 64 44"><path fill="currentColor" d="M19,40 C8,40 3,30 12,24 C9,15 23,12 28,18 C32,9 48,11 49,21 C60,20 61,33 51,36 C54,43 40,44 33,39 C29,43 23,43 19,40 Z"/></svg>
-        </div>
-        <h3>⚠️ 临产征兆提醒</h3>
-        <p id="tipLabor">加载中...</p>
-      </div>
+      <div class="pp-bar"><div class="pp-fill" id="prepFill" style="width:0%"></div></div>
+      <div class="pp-foot"><span id="prepDoneText">已购 0 件</span><span id="prepTodoText">待购 0 件</span></div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">📅</span> 近期产检倒计时</div>
-      <div class="calendar-list" id="calendarList">加载中...</div>
+    <!-- 暖心提醒（柔和浅橙） -->
+    <div class="warm-remind">
+      <div class="wr-title"><span class="ico">💛</span> 暖心提醒</div>
+      <div id="warmRemindList"><p style="font-size:13px;color:var(--text-l);text-align:center;padding:6px 0">正在整理贴心提醒…</p></div>
     </div>
 
-    <div class="card" id="dashExpiryCard" style="display:none;border-left:4px solid var(--warning)">
-      <div class="card-title"><span class="icon">⏰</span> 保质期临期提醒</div>
-      <div id="dashExpiryList"></div>
+    <!-- 4 个快捷卡片 -->
+    <div class="quick-grid">
+      <div class="quick-card" onclick="openFeature('inventory')"><span class="qc-ico" style="background:#EAF5EE;color:var(--c-inv)">🧺</span><span class="qc-name">待产筹备</span><span class="qc-sub">物资 · 效期 · 护理计划</span></div>
+      <div class="quick-card" onclick="openFeature('checkup')"><span class="qc-ico" style="background:#FDF0EE;color:var(--c-checkup)">🤰</span><span class="qc-name">妈妈专区</span><span class="qc-sub">产检 · 育儿知识</span></div>
+      <div class="quick-card" onclick="openFeature('growth')"><span class="qc-ico" style="background:#EAF7F3;color:var(--c-growth)">🌱</span><span class="qc-name">宝宝成长</span><span class="qc-sub">时光档案 · 疫苗儿保</span></div>
+      <div class="quick-card" onclick="openFeature('spending')"><span class="qc-ico" style="background:#FDF0F2;color:var(--c-spend)">🎁</span><span class="qc-name">全家记录</span><span class="qc-sub">为爱花销 · 暖心提醒</span></div>
     </div>
+  </section>
 
-    <div class="card" id="dashReminderCard" style="display:none;border-left:4px solid #9B7EBD">
-      <div class="card-title"><span class="icon">🔔</span> 即将到期提醒</div>
-      <div id="dashReminderList"></div>
+  <!-- ===== 待产筹备（收纳页） ===== -->
+  <section class="view" id="view-prepare">
+    <div class="feature-page">
+      <div class="feature-hero"><span class="fh-emoji">🧺</span><div class="fh-title">待产筹备</div><div class="fh-sub">为小宝贝的来临，全家一起准备</div></div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="openFeature('inventory')"><span class="fc-ico" style="background:#EAF5EE;color:var(--c-inv)">🧺</span><div class="fc-info"><div class="fc-name">全家待产物资筹备</div><div class="fc-sub">妈妈 · 宝宝 · 证件 · 剖腹产物资清单</div></div></div>
+        <div class="feature-card" onclick="openFeature('expiry')"><span class="fc-ico" style="background:#FBF2E4;color:var(--c-expiry)">⏳</span><div class="fc-info"><div class="fc-name">物品效期提醒</div><div class="fc-sub">奶瓶 · 药品 · 纸尿裤临期一目了然</div></div></div>
+        <div class="feature-card" onclick="openFeature('newborn')"><span class="fc-ico" style="background:#F3EBFA;color:var(--c-newborn)">🍼</span><div class="fc-info"><div class="fc-name">新生儿护理计划</div><div class="fc-sub">喂养 · 睡眠 · 护理贴心规划</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 妈妈专区（收纳页） ===== -->
+  <section class="view" id="view-mom">
+    <div class="feature-page">
+      <div class="feature-hero"><span class="fh-emoji">🤰</span><div class="fh-title">妈妈专区</div><div class="fh-sub">每一份产检记录，都是爱的见证</div></div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="openFeature('checkup')"><span class="fc-ico" style="background:#FDF0EE;color:var(--c-checkup)">📋</span><div class="fc-info"><div class="fc-name">妈妈孕期产检记录</div><div class="fc-sub">产检项目 · 检查结果 · 倒计时</div></div></div>
+        <div class="feature-card" onclick="openFeature('knowledge')"><span class="fc-ico" style="background:#FBF3DC;color:var(--c-knowledge)">📚</span><div class="fc-info"><div class="fc-name">育儿知识宝典</div><div class="fc-sub">孕期到育儿的知识收藏与笔记</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 宝宝成长（收纳页） ===== -->
+  <section class="view" id="view-baby">
+    <div class="feature-page">
+      <div class="feature-hero"><span class="fh-emoji">👶</span><div class="fh-title">宝宝成长</div><div class="fh-sub">记录小宝贝每一天的变化与成长</div></div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="openFeature('growth')"><span class="fc-ico" style="background:#EAF7F3;color:var(--c-growth)">🌱</span><div class="fc-info"><div class="fc-name">宝贝成长时光档案</div><div class="fc-sub">身高体重 · 头围 · 成长曲线</div></div></div>
+        <div class="feature-card" onclick="openFeature('babycheck')"><span class="fc-ico" style="background:#EAF2FB;color:var(--c-babycheck)">💉</span><div class="fc-info"><div class="fc-name">宝宝疫苗&儿保记录</div><div class="fc-sub">疫苗针次 · 儿保检查 · 下次提醒</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 全家记录（收纳页） ===== -->
+  <section class="view" id="view-family">
+    <div class="feature-page">
+      <div class="feature-hero"><span class="fh-emoji">💛</span><div class="fh-title">全家记录</div><div class="fh-sub">把为爱付出的点点滴滴都收好</div></div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="openFeature('spending')"><span class="fc-ico" style="background:#FDF0F2;color:var(--c-spend)">🎁</span><div class="fc-info"><div class="fc-name">全家为爱花销记录</div><div class="fc-sub">消费台账 · 奶粉纸尿裤专项统计</div></div></div>
+        <div class="feature-card" onclick="openFeature('reminders')"><span class="fc-ico" style="background:#F6ECF7;color:var(--c-remind)">💛</span><div class="fc-info"><div class="fc-name">家庭暖心提醒</div><div class="fc-sub">自定义重要日子与待办提醒</div></div></div>
+      </div>
+      <div class="feature-actions">
+        <div class="feature-action" onclick="shareData()"><span class="fa-ico">👨‍👩‍👧</span><span>分享给家人<br>一起守护宝贝</span></div>
+        <div class="feature-action" onclick="document.getElementById('importFile').click()"><span class="fa-ico">📂</span><span>导入数据</span></div>
+        <div class="feature-action" onclick="exportAllData()"><span class="fa-ico">💾</span><span>导出数据</span></div>
+        <div class="feature-action" onclick="openSettings()"><span class="fa-ico">⚙️</span><span>设置</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ===== Daily Record ===== -->
   <!-- ===== Inventory ===== -->
   <section class="view" id="view-inventory">
-    <h2 class="section-title">📦 待产物资台账</h2>
+    <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
+    <h2 class="section-title">🧺 全家待产物资筹备</h2>
     
     <div class="inv-summary" id="invSummary">
       <div class="inv-summary-item"><div class="num" id="invTotalItems">0</div><div class="label">总物品</div></div>
@@ -864,7 +829,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Checkup ===== -->
   <section class="view" id="view-checkup">
-    <h2 class="section-title">👩 宝妈产检台账</h2>
+    <div class="sub-back"><button onclick="goTab('mom')">‹ 返回妈妈专区</button></div>
+    <h2 class="section-title">📋 妈妈孕期产检记录</h2>
 
     <div class="card" style="border-left:4px solid var(--primary-d)" id="momCheckStats">计算中...</div>
 
@@ -918,7 +884,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Baby Check & Vaccine ===== -->
   <section class="view" id="view-babycheck">
-    <h2 class="section-title">👶 宝宝检查 & 疫苗接种台账</h2>
+    <div class="sub-back"><button onclick="goTab('baby')">‹ 返回宝宝成长</button></div>
+    <h2 class="section-title">💉 宝宝疫苗&儿保记录</h2>
 
     <div class="card" style="border-left:4px solid var(--info)" id="babyCheckStats">计算中...</div>
 
@@ -979,7 +946,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Expiry Tracking ===== -->
   <section class="view" id="view-expiry">
-    <h2 class="section-title">⏰ 保质期提醒</h2>
+    <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
+    <h2 class="section-title">⏳ 物品效期提醒</h2>
 
     <div class="inv-summary">
       <div class="inv-summary-item"><div class="num" id="expiryTotal">0</div><div class="label">已登记</div></div>
@@ -1000,7 +968,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Newborn Plan ===== -->
   <section class="view" id="view-newborn">
-    <h2 class="section-title">🍼 新生儿规划库</h2>
+    <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
+    <h2 class="section-title">🍼 新生儿护理计划</h2>
 
     <div class="card">
       <div class="card-title"><span class="icon">🍼</span> 纯奶粉喂养参考方案</div>
@@ -1063,7 +1032,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Knowledge ===== -->
   <section class="view" id="view-knowledge">
-    <h2 class="section-title">📚 育儿知识库</h2>
+    <div class="sub-back"><button onclick="goTab('mom')">‹ 返回妈妈专区</button></div>
+    <h2 class="section-title">📚 育儿知识宝典</h2>
 
     <div class="card">
       <div class="form-row">
@@ -1106,7 +1076,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Baby Growth Archive ===== -->
   <section class="view" id="view-growth">
-    <h2 class="section-title">📏 宝宝成长档案</h2>
+    <div class="sub-back"><button onclick="goTab('baby')">‹ 返回宝宝成长</button></div>
+    <h2 class="section-title">🌱 宝贝成长时光档案</h2>
 
     <div class="growth-tab-bar">
       <span class="growth-tab-btn active" onclick="switchGrowthTab('growth',this)">📊 身高体重打卡</span>
@@ -1235,7 +1206,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Custom Reminders ===== -->
   <section class="view" id="view-reminders">
-    <h2 class="section-title">⏰ 自定义提醒</h2>
+    <div class="sub-back"><button onclick="goTab('family')">‹ 返回全家记录</button></div>
+    <h2 class="section-title">💛 家庭暖心提醒</h2>
 
     <div class="inv-summary">
       <div class="inv-summary-item"><div class="num" id="rmTotal">0</div><div class="label">总提醒</div></div>
@@ -1284,7 +1256,8 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
   <!-- ===== Spending Ledger ===== -->
   <section class="view" id="view-spending">
-    <h2 class="section-title">💰 宝宝成长花销</h2>
+    <div class="sub-back"><button onclick="goTab('family')">‹ 返回全家记录</button></div>
+    <h2 class="section-title">🎁 全家为爱花销记录</h2>
 
     <!-- Summary stats: top full-width total -->
     <div class="spend-total">
@@ -1424,11 +1397,11 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
 <!-- Mobile bottom tab bar -->
 <nav class="bottom-tabbar" id="bottomTabbar">
-  <button class="btab active" data-view="dashboard" onclick="switchView('dashboard')"><span class="btab-ico">📊</span><span class="btab-label">首页</span></button>
-  <button class="btab" data-view="inventory" onclick="switchView('inventory')"><span class="btab-ico">📦</span><span class="btab-label">待产</span></button>
-  <button class="btab" data-view="growth" onclick="switchView('growth')"><span class="btab-ico">📏</span><span class="btab-label">成长</span></button>
-  <button class="btab" data-view="spending" onclick="switchView('spending')"><span class="btab-ico">💰</span><span class="btab-label">花销</span></button>
-  <button class="btab" data-view="more" onclick="toggleSidebar(true)"><span class="btab-ico">☰</span><span class="btab-label">更多</span></button>
+  <button class="btab active" data-tab="home" onclick="goTab('home')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span class="btab-label">首页</span><span class="btab-sub">我们的小宝贝</span></button>
+  <button class="btab" data-tab="prepare" onclick="goTab('prepare')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l1.5 11a1 1 0 0 1-1 1H4.5a1 1 0 0 1-1-1z"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2"/></svg><span class="btab-label">待产筹备</span></button>
+  <button class="btab" data-tab="mom" onclick="goTab('mom')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5S4 16.8 4 11.7A4 4 0 0 1 8 7.7c1.6 0 2.8.9 4 2.4 1.2-1.5 2.4-2.4 4-2.4a4 4 0 0 1 4 4c0 5.1-8 9.8-8 9.8z"/></svg><span class="btab-label">妈妈专区</span></button>
+  <button class="btab" data-tab="baby" onclick="goTab('baby')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="5.5" ry="8"/><circle cx="8.5" cy="8" r="2"/><circle cx="12" cy="6.5" r="2.2"/><circle cx="15.5" cy="8" r="1.8"/></svg><span class="btab-label">宝宝成长</span></button>
+  <button class="btab" data-tab="family" onclick="goTab('family')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="2.6"/><path d="M3.5 17.5c0-2.8 2-4.5 4.5-4.5s4.5 1.7 4.5 4.5"/><circle cx="16.5" cy="8.5" r="2"/><path d="M13.5 16.8c.3-2.2 1.8-3.6 3.8-3.6s3.5 1.4 3.7 3.6"/></svg><span class="btab-label">全家记录</span></button>
 </nav>
 
 <!-- Modal -->
@@ -1690,7 +1663,6 @@ function applyReadonlyUI() {
     if (kw.test(oc)) el.style.display = 'none';
   });
   document.querySelectorAll('input,select,textarea').forEach(el => { el.disabled = true; });
-  document.querySelectorAll('.nav-item[data-view="import"],.nav-item[data-view="settings"],.nav-item[data-view="export"]').forEach(el => el.style.display = 'none');
   const banner = document.getElementById('readonlyBanner');
   if (banner) banner.style.display = 'block';
 }
@@ -1831,60 +1803,65 @@ function calcDaysLeft() {
   return Math.ceil((due - now) / (1000*60*60*24));
 }
 
-// ============ NAVIGATION ============
-function switchView(view) {
+// ============ NAVIGATION（底部 5 Tab + 功能收纳） ============
+// 子功能 → 所属 Tab 映射（用于底部 Tab 高亮）
+const FEATURE_TAB = {
+  inventory: 'prepare', expiry: 'prepare', newborn: 'prepare',
+  checkup: 'mom', knowledge: 'mom',
+  growth: 'baby', babycheck: 'baby',
+  spending: 'family', reminders: 'family'
+};
+const TAB_VIEWS = ['home', 'prepare', 'mom', 'baby', 'family'];
+
+// 顶层 Tab 切换（home 渲染仪表盘；prepare/mom/baby/family 为静态收纳页）
+function goTab(tab) {
+  if (!TAB_VIEWS.includes(tab)) return openFeature(tab);
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.btab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const viewEl = document.getElementById('view-' + tab);
+  if (!viewEl) return;
+  viewEl.classList.add('active');
+  if (tab === 'home') renderHome();
+  window.scrollTo(0, 0);
+}
+
+// 从收纳页卡片 / 首页快捷卡进入子功能：高亮所属 Tab，渲染子页
+function openFeature(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+  const owner = FEATURE_TAB[view];
+  if (owner) {
+    const ownerBtn = document.querySelector(`.btab[data-tab="${owner}"]`);
+    if (ownerBtn) ownerBtn.classList.add('active');
+  }
   const viewEl = document.getElementById('view-' + view);
   if (!viewEl) return;
   viewEl.classList.add('active');
-  const navEl = document.querySelector(`.nav-item[data-view="${view}"]`);
-  if (navEl) navEl.classList.add('active');
-  // 更新移动端底部 Tab 高亮
-  document.querySelectorAll('.btab').forEach(t => {
-    if (t.dataset.view !== 'more') t.classList.toggle('active', t.dataset.view === view);
-  });
-  toggleSidebar(false); // always close sidebar after navigation
   renderView(view);
   window.scrollTo(0, 0);
 }
 
-// Handle action-type nav items (import/export/share/settings)
-function navAction(action) {
-  toggleSidebar(false); // close sidebar first
-  setTimeout(() => {
-    switch (action) {
-      case 'settings': openSettings(); break;
-      case 'export': exportAllData(); break;
-      case 'import': document.getElementById('importFile').click(); break;
-      case 'share': shareData(); break;
-    }
-  }, 200); // small delay for sidebar close animation
+// 兼容旧调用（子页「查看全部」链接 / 数据导入 / 重置流程）
+function switchView(view) {
+  if (view === 'dashboard') view = 'home';
+  if (TAB_VIEWS.includes(view)) return goTab(view);
+  return openFeature(view);
 }
 
-function toggleSidebar(force) {
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sidebarOverlay');
-  if (force === false) {
-    sb.classList.remove('open');
-    ov.classList.remove('show');
-  } else if (force === true) {
-    sb.classList.add('open');
-    ov.classList.add('show');
-  } else {
-    sb.classList.toggle('open');
-    ov.classList.toggle('show');
+// 侧边栏已移除，保留空实现以防历史调用报错
+function toggleSidebar() {}
+function navAction(action) {
+  switch (action) {
+    case 'settings': openSettings(); break;
+    case 'export': exportAllData(); break;
+    case 'import': document.getElementById('importFile').click(); break;
+    case 'share': shareData(); break;
   }
 }
 
-// Close sidebar on Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') toggleSidebar(false);
-});
-
 function renderView(view) {
   switch(view) {
-    case 'dashboard': renderDashboard(); break;
+    case 'home': case 'dashboard': renderHome(); break;
     case 'inventory': renderInventory(); break;
     case 'checkup': renderCheckup(); break;
     case 'expiry': renderExpiry(); break;
@@ -1897,89 +1874,111 @@ function renderView(view) {
   }
 }
 
-// ============ DASHBOARD ============
-function renderDashboard() {
-  const week = calcPregnancyWeek();
+// ============ HOME 暖心仪表盘 ============
+function renderHome() {
+  // 顶部倒计时
   const daysLeft = calcDaysLeft();
   const daysPreg = calcPregnancyDays();
-  
-  document.getElementById('currentWeek').textContent = week + (daysPreg % 7 > 0 ? '+' + (daysPreg % 7) : '');
-  document.getElementById('daysLeft').textContent = daysLeft > 0 ? daysLeft : '已到/已过';
-  document.getElementById('daysPreg').textContent = daysPreg;
-  
-  // C-section countdown
-  const csecEl = document.getElementById('daysToCsection');
-  if (csecEl) {
-    const csDate = data.config.csectionDate || data.config.dueDate;
-    const cs = new Date(csDate);
-    const now2 = new Date(); now2.setHours(0,0,0,0);
-    cs.setHours(0,0,0,0);
-    const dToCs = Math.ceil((cs - now2) / (1000*60*60*24));
-    csecEl.textContent = dToCs > 0 ? dToCs : dToCs === 0 ? '今天' : '已过';
+  const week = calcPregnancyWeek();
+  const dlEl = document.getElementById('homeDaysLeft');
+  if (dlEl) dlEl.textContent = daysLeft > 0 ? daysLeft : '💗';
+  const wkEl = document.getElementById('homeWeek');
+  if (wkEl) wkEl.textContent = `第 ${week} 周` + (daysPreg % 7 > 0 ? ` +${daysPreg % 7}` : '');
+  const dueEl = document.getElementById('homeDueDate');
+  if (dueEl) {
+    const dd = new Date(data.config.dueDate);
+    if (!isNaN(dd.getTime())) dueEl.textContent = `${dd.getFullYear()}年${dd.getMonth()+1}月${dd.getDate()}日`;
   }
-  
-  const progress = Math.min(100, Math.round(daysPreg / 280 * 100));
-  document.getElementById('progressFill').style.width = progress + '%';
-  document.getElementById('progressText').textContent = progress + '%';
-  
-  // Due date display
-  const dd = new Date(data.config.dueDate);
-  document.getElementById('dueDateDisplay').textContent = 
-    `${dd.getFullYear()}年${dd.getMonth()+1}月${dd.getDate()}日`;
-  
-  // C-section date display
-  const csDisp = document.getElementById('csectionDateDisplay');
-  if (csDisp && data.config.csectionDate) {
-    const cd = new Date(data.config.csectionDate);
-    csDisp.textContent = `${cd.getFullYear()}年${cd.getMonth()+1}月${cd.getDate()}日`;
+  const cw = document.getElementById('homeCsecWrap');
+  const csDisp = document.getElementById('homeCsecDate');
+  if (cw && csDisp) {
+    if (data.config.csectionDate && data.config.csectionDate !== data.config.dueDate) {
+      const cd = new Date(data.config.csectionDate);
+      if (!isNaN(cd.getTime())) {
+        cw.style.display = '';
+        csDisp.textContent = `${cd.getFullYear()}年${cd.getMonth()+1}月${cd.getDate()}日`;
+      } else cw.style.display = 'none';
+    } else cw.style.display = 'none';
   }
-  
-  // Welcome name
-  const wn = document.getElementById('welcomeName');
-  if (wn) wn.textContent = data.config.userName ? '，' + data.config.userName : '';
-  
-  // Tips
-  const w = Math.max(28, Math.min(40, week));
-  const tips = weekTips[w] || weekTips[40];
-  document.getElementById('tipBody').textContent = tips.body;
-  document.getElementById('tipBaby').textContent = tips.baby;
-  document.getElementById('tipLabor').textContent = tips.labor;
-  
-  // Calendar - upcoming checkups
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  const upcoming = data.checkups
-    .filter(c => !c.done)
-    .map(c => ({...c, dateObj: new Date(c.date)}))
-    .filter(c => c.dateObj >= now)
-    .sort((a,b) => a.dateObj - b.dateObj)
-    .slice(0, 3);
-  
-  const calList = document.getElementById('calendarList');
-  if (upcoming.length === 0) {
-    calList.innerHTML = '<p style="text-align:center;color:var(--text-l);padding:20px">暂无待检产检项 🎉</p>';
-  } else {
-    calList.innerHTML = upcoming.map(c => {
-      const days = Math.ceil((c.dateObj - now) / (1000*60*60*24));
-      const urgent = days <= 7;
-      return `<div class="calendar-item ${urgent?'urgent':''}">
-        <div class="cal-date">
-          <div class="month">${c.dateObj.getMonth()+1}月</div>
-          <div class="day">${c.dateObj.getDate()}</div>
-        </div>
-        <div class="cal-info">
-          <div class="name">${c.week} · ${c.item}</div>
-          <div class="countdown">${days === 0 ? '今天！' : days === 1 ? '明天！' : `还有 ${days} 天`}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-  
-  // Expiry warning on dashboard
-  renderDashExpiry();
-  // Custom reminders on dashboard
-  renderDashReminders();
+
+  // 全家为爱筹备进度
+  renderPrepProgress();
+  // 暖心提醒（产检 / 效期 / 疫苗 / 自定义）
+  renderWarmRemind();
 }
+
+function renderPrepProgress() {
+  const tabs = ['doc','csec','fang','hospBaby','hospMom','homeBaby','homeMom','mom','baby'];
+  let total = 0, done = 0;
+  tabs.forEach(t => (data.inventory[t] || []).forEach(i => { total++; if (i.done) done++; }));
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const pctEl = document.getElementById('prepPct');
+  const fillEl = document.getElementById('prepFill');
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (fillEl) fillEl.style.width = pct + '%';
+  const doneEl = document.getElementById('prepDoneText');
+  const todoEl = document.getElementById('prepTodoText');
+  if (doneEl) doneEl.textContent = `已备好 ${done} 件`;
+  if (todoEl) todoEl.textContent = total ? `待购 ${total - done} 件` : '清单是空的';
+}
+
+// 暖心提醒：聚合产检(30天)/效期(30天)/疫苗(7天)/自定义(7天)，柔和浅橙配色
+function renderWarmRemind() {
+  const list = document.getElementById('warmRemindList');
+  if (!list) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const daysTo = d => Math.ceil((new Date(d) - now) / (1000*60*60*24));
+  const items = [];
+  // 产检（30 天内）
+  (data.checkups || []).filter(c => !c.done && c.date)
+    .map(c => ({...c, _d: daysTo(c.date)}))
+    .filter(c => c._d >= 0 && c._d <= 30)
+    .sort((a,b) => a._d - b._d)
+    .slice(0, 2)
+    .forEach(c => items.push({ emoji:'🩺', title:`产检 · ${c.item || c.week}`, days:c._d, view:'checkup' }));
+  // 物品效期（30 天内）
+  const expItems = [];
+  ['doc','csec','fang','hospBaby','hospMom','homeBaby','homeMom','mom','baby'].forEach(t =>
+    (data.inventory[t] || []).forEach(i => { if (i.expiryDate) expItems.push({...i}); }));
+  for (let k of getAllSpendKeys()) {
+    (data.spending[k] || []).forEach(i => { if (i.expiryDate) expItems.push({...i}); });
+  }
+  expItems.map(i => ({...i, _d: daysTo(i.expiryDate)}))
+    .filter(i => i._d >= 0 && i._d <= 30)
+    .sort((a,b) => a._d - b._d)
+    .slice(0, 2)
+    .forEach(i => items.push({ emoji:'⏳', title:`效期 · ${i.name}`, days:i._d, view:'expiry' }));
+  // 疫苗（7 天内 / 已过期未种）
+  (data.vaccines || []).filter(v => !v.done && v.date)
+    .map(v => ({...v, _d: daysTo(v.date)}))
+    .filter(v => v._d <= 7)
+    .sort((a,b) => a._d - b._d)
+    .slice(0, 2)
+    .forEach(v => items.push({ emoji:'💉', title:`疫苗 · ${v.name}`, days:v._d, view:'babycheck' }));
+  // 自定义提醒（7 天内）
+  (data.customReminders || []).filter(r => !r.done && r.date)
+    .map(r => ({...r, _d: daysTo(r.date)}))
+    .filter(r => r._d >= 0 && r._d <= 7)
+    .sort((a,b) => a._d - b._d)
+    .slice(0, 2)
+    .forEach(r => items.push({ emoji:'💛', title:r.title, days:r._d, view:'reminders' }));
+  if (items.length === 0) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--text-l);text-align:center;padding:8px 0">最近没有待办提醒，一切安好 ☁️</p>';
+    return;
+  }
+  list.innerHTML = items.slice(0, 5).map(it => {
+    const urgent = it.days <= 3;
+    const dayTxt = it.days === 0 ? '今天' : it.days === 1 ? '明天' : `${it.days} 天后`;
+    return `<div class="wr-item" onclick="openFeature('${it.view}')">
+      <span class="wr-ico">${it.emoji}</span>
+      <span class="wr-text">${it.title}</span>
+      <span class="wr-days${urgent ? ' hot' : ''}">${dayTxt}</span>
+    </div>`;
+  }).join('');
+}
+
+// 旧 dashboard 渲染已由 renderHome 取代，保留别名兼容历史调用
+function renderDashboard() { renderHome(); }
 
 function renderDashExpiry() {
   const allItems = [];
@@ -2009,7 +2008,7 @@ function renderDashExpiry() {
     card.style.display = 'block';
     list.innerHTML = warnItems.slice(0, 5).map(item => {
       const badge = getExpiryBadge(item.expiryDate);
-      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '💰 消费台账';
+      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '🎁 为爱花销';
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
         <span style="font-size:14px">${item.name} <span style="font-size:12px;color:var(--text-l)">${source}</span></span>
         ${badge.html}
@@ -3545,7 +3544,7 @@ function renderSpendMilkStats() {
         <span class="mini-stat-val">${totalCans} 罐</span>
       </div>
       <div class="mini-stat-row">
-        <span class="mini-stat-label">💰 奶粉总花费</span>
+        <span class="mini-stat-label">🎁 奶粉总花费</span>
         <span class="mini-stat-val">¥${totalCost.toFixed(2)}</span>
       </div>
       <div class="mini-stat-row">
@@ -3611,7 +3610,7 @@ function renderSpendDiaperStats() {
         <span class="mini-stat-val">${totalPieces} 片</span>
       </div>
       <div class="mini-stat-row">
-        <span class="mini-stat-label">💰 纸尿裤总花费</span>
+        <span class="mini-stat-label">🎁 纸尿裤总花费</span>
         <span class="mini-stat-val">¥${totalCost.toFixed(2)}</span>
       </div>
       <div class="mini-stat-row">
@@ -3687,7 +3686,7 @@ function renderExpiry() {
     const items = [...expired, ...warn];
     warnList.innerHTML = items.map(item => {
       const badge = getExpiryBadge(item.expiryDate);
-      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '💰 消费台账';
+      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '🎁 为爱花销';
       return `<div class="prep-item ${badge.cls}">
         <div class="prep-body">
           <div><span class="prep-name">${item.name}</span><span class="prep-qty">×${item.qty||1}</span>${badge.html}</div>
@@ -3704,7 +3703,7 @@ function renderExpiry() {
   } else {
     allList.innerHTML = allItems.map(item => {
       const badge = getExpiryBadge(item.expiryDate);
-      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '💰 消费台账';
+      const source = item._source === 'inv' ? `📦 ${item._tabLabel}` : '🎁 为爱花销';
       return `<div class="prep-item ${badge.cls}">
         <div class="prep-body">
           <div><span class="prep-name">${item.name}</span><span class="prep-qty">×${item.qty||1}</span>${badge.html}</div>
@@ -4701,7 +4700,7 @@ function saveSettings() {
   data.config.userName = userName;
   saveData();
   closeModal();
-  renderDashboard();
+  renderHome();
   showToast('✅ 设置已保存');
 }
 
@@ -4820,7 +4819,7 @@ loadData();
   patchSpendData4();
   batchImportPrepList();
   connectStream();
-  renderDashboard();
+  renderHome();
   saveData(); // persist recovered data back to localStorage too
   if (CLOUD.readonly) { applyReadonlyUI(); cloudSetStatus('readonly'); }
   else if (CLOUD.status !== 'offline') cloudSetStatus('online');
