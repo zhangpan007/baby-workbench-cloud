@@ -13,11 +13,18 @@
  *
  * 防篡改：所有写操作必须携带与服务器一致的 OWNER_TOKEN；
  * 只读分享链接 (?view=1) 打开的页面不持有令牌，无法修改云端数据。
+ *
+ * 持久化（关键）：
+ *   当设置了 GITHUB_TOKEN 时，权威数据存到 GitHub 仓库文件 cloud-data/store.json
+ *   （AES-256-GCM 加密，仓库即使公开也看不到明文），因此 Render 免费版磁盘
+ *   临时重置/休眠/重新部署都不会丢数据。未设置 GITHUB_TOKEN 时回退到本地
+ *   data/store.json（用于本地开发），并作为线上的一份缓存兜底。
  */
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 // 管理口令：部署时通过环境变量设置，家庭成员不知道则永远只能只读
@@ -26,26 +33,147 @@ const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'store.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
+// ---- GitHub 持久化配置 ----
+const USE_GITHUB = !!process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'zhangpan007/baby-workbench-cloud';
+const GITHUB_DATA_PATH = process.env.GITHUB_DATA_PATH || 'cloud-data/store.json';
+// 加密密钥：优先用专用密钥，缺失时回退 OWNER_TOKEN，保证本地/线上都能跑
+const DATA_ENC_KEY = process.env.DATA_ENC_KEY || OWNER_TOKEN;
+const GH_HEADERS = {
+  'Authorization': 'Bearer ' + GITHUB_TOKEN,
+  'Accept': 'application/vnd.github+json',
+  'User-Agent': 'baby-workbench-server',
+  'Content-Type': 'application/json'
+};
+
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-// 内存中的权威数据副本（启动时从磁盘恢复）
+// 内存中的权威数据副本（启动时从磁盘/仓库恢复）
 let store = { data: null, version: 0, updatedAt: null };
-if (fs.existsSync(DATA_FILE)) {
-  try {
-    const raw = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-    if (raw && typeof raw === 'object') store = raw;
-  } catch (e) { /* 损坏则忽略，保持空 */ }
-}
-if (typeof store.version !== 'number') store.version = 0;
-if (!('data' in store)) store.data = null;
-
 const clients = []; // SSE 订阅者
 
+// ---------------- 本地文件缓存（兜底 / 本地开发） ----------------
+function readLocalStore() {
+  try {
+    if (!fs.existsSync(DATA_FILE)) return null;
+    const raw = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    if (raw && typeof raw === 'object') return raw;
+  } catch (e) { /* 损坏则忽略 */ }
+  return null;
+}
+
 // 原子写：先写临时文件再 rename，避免半截写入导致文件损坏
+function writeLocalStore() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    const tmp = DATA_FILE + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(store));
+    fs.renameSync(tmp, DATA_FILE);
+  } catch (e) { /* 本地写失败不影响 GitHub 权威存储 */ }
+}
+
+// ---------------- 加密（AES-256-GCM） ----------------
+function encKeyBuf() {
+  return crypto.scryptSync(DATA_ENC_KEY, 'baby-workbench-salt-v1', 32);
+}
+function encryptObj(obj) {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', encKeyBuf(), iv);
+  const enc = Buffer.concat([cipher.update(JSON.stringify(obj), 'utf8'), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return 'ENC1:' + Buffer.concat([iv, tag, enc]).toString('base64');
+}
+function decryptStr(str) {
+  const buf = Buffer.from(str, 'base64');
+  const iv = buf.subarray(0, 12);
+  const tag = buf.subarray(12, 28);
+  const enc = buf.subarray(28);
+  const decipher = crypto.createDecipheriv('aes-256-gcm', encKeyBuf(), iv);
+  decipher.setAuthTag(tag);
+  const json = Buffer.concat([decipher.update(enc), decipher.final()]).toString('utf8');
+  return JSON.parse(json);
+}
+
+// ---------------- GitHub Contents API ----------------
+async function githubApi(method, body) {
+  const url = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_DATA_PATH;
+  const opts = { method, headers: GH_HEADERS };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(url, opts);
+}
+
+let githubSha = null; // 当前文件 SHA，用于更新时避免 409 冲突
+
+async function githubRead() {
+  try {
+    const r = await githubApi('GET');
+    if (r.status === 404) return null;            // 文件不存在（首次）
+    if (r.status === 403) { console.error('[GH] 读取被限流或无权限(status 403)'); return null; }
+    if (!r.ok) { console.error('[GH] 读取失败 status', r.status); return null; }
+    const j = await r.json();
+    githubSha = j.sha;
+    const raw = Buffer.from(j.content, 'base64').toString('utf8');
+    if (raw.startsWith('ENC1:')) return decryptStr(raw.slice(5));
+    return JSON.parse(raw); // 兼容未加密旧内容
+  } catch (e) {
+    console.error('[GH] 读取异常', e.message);
+    return null;
+  }
+}
+
+// 串行化写入，避免并发更新互相覆盖
+let ghWriteQueue = Promise.resolve();
+function githubWrite(obj) {
+  ghWriteQueue = ghWriteQueue.then(() => _githubWriteOnce(obj)).catch(() => {});
+  return ghWriteQueue;
+}
+async function _githubWriteOnce(obj) {
+  const content = encryptObj(obj);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const body = { message: 'sync: update baby-workbench store', content };
+    if (githubSha) body.sha = githubSha; // 存在则带 SHA 更新
+    try {
+      const r = await githubApi('PUT', body);
+      if (r.ok) {
+        const j = await r.json();
+        githubSha = j.content.sha;
+        return true;
+      }
+      if (r.status === 409 || r.status === 422) {
+        // 冲突或缺少 SHA：重新拉取最新 SHA 后重试一次
+        await githubRead();
+        continue;
+      }
+      const txt = await r.text().catch(() => '');
+      console.error('[GH] 写入失败 status', r.status, txt.slice(0, 200));
+    } catch (e) {
+      console.error('[GH] 写入异常', e.message);
+    }
+    return false;
+  }
+  return false;
+}
+
+// ---------------- 统一读写入口 ----------------
 function saveStore() {
-  const tmp = DATA_FILE + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify(store));
-  fs.renameSync(tmp, DATA_FILE);
+  writeLocalStore();                 // 本地缓存（兜底）
+  if (USE_GITHUB) githubWrite(store); // GitHub 权威持久化（异步、串行）
+}
+
+async function loadInitialStore() {
+  if (USE_GITHUB) {
+    const gh = await githubRead();
+    if (gh && (gh.data || gh.version)) { store = gh; return; }
+    // GitHub 为空：用本地缓存播种（迁移旧数据 / 兜底）
+    const local = readLocalStore();
+    if (local && (local.data || local.version)) {
+      store = local;
+      await githubWrite(store);
+      return;
+    }
+  }
+  store = readLocalStore() || { data: null, version: 0, updatedAt: null };
 }
 
 // 向所有订阅者广播最新数据
@@ -179,6 +307,16 @@ const server = http.createServer(async (req, res) => {
   serveStatic(req, res);
 });
 
-server.listen(PORT, () => {
-  console.log('宝宝工作台云端版已启动: http://localhost:' + PORT + '  (OWNER_TOKEN=' + (OWNER_TOKEN === 'baby-cloud-owner' ? '默认' : '已自定义') + ')');
-});
+async function start() {
+  await loadInitialStore();
+  // sanity
+  if (typeof store.version !== 'number') store.version = 0;
+  if (!('data' in store)) store.data = null;
+  server.listen(PORT, () => {
+    const mode = USE_GITHUB ? ('GitHub 持久化 -> ' + GITHUB_REPO + '/' + GITHUB_DATA_PATH) : '本地文件回退';
+    console.log('宝宝工作台云端版已启动: http://localhost:' + PORT +
+      '  (OWNER_TOKEN=' + (OWNER_TOKEN === 'baby-cloud-owner' ? '默认' : '已自定义') + ')  存储=' + mode);
+  });
+}
+
+start();

@@ -15,3 +15,16 @@ services:
         value: "22"
       - key: OWNER_TOKEN
         generateValue: true
+      # GitHub 持久化：把权威数据存到仓库文件 cloud-data/store.json（加密），
+      # 彻底解决免费版临时磁盘重置导致数据丢失的问题。
+      - key: GITHUB_REPO
+        value: "zhangpan007/baby-workbench-cloud"
+      - key: GITHUB_DATA_PATH
+        value: "cloud-data/store.json"
+      # 加密密钥：Render 自动随机生成并保密存储，不会写入仓库源码。请勿手动修改。
+      - key: DATA_ENC_KEY
+        generateValue: true
+      # 仓库读写令牌：sync:false 表示不写入仓库源码，需到 Render 后台手动填入
+      # 你的 fine-grained token（仅授权 baby-workbench-cloud 仓库、Contents: Read and write）。
+      - key: GITHUB_TOKEN
+        sync: false
