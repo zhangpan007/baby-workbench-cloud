@@ -1271,8 +1271,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
     <!-- Category tabs -->
     <div class="inv-tabs" id="spendTabs">
-      <span class="inv-tab active" onclick="switchSpendTab('prep',this)">🏥 待产前置</span>
-      <span class="inv-tab" onclick="switchSpendTab('month',this)">🌙 月子开销</span>
+      <span class="inv-tab active" onclick="switchSpendTab('month',this)">🌙 月子开销</span>
       <span class="inv-tab" onclick="switchSpendTab('daily',this)">🍼 日常刚需</span>
       <span class="inv-tab" onclick="switchSpendTab('medical',this)">💊 医疗健康</span>
       <span class="inv-tab" onclick="switchSpendTab('edu',this)">🎨 早教娱乐</span>
@@ -1383,7 +1382,7 @@ const defaultData = {
   milestones: [],
   birthDocs: [],
   notes: [],
-  spending: { prep:[], month:[], daily:[], medical:[], edu:[], other:[] },
+  spending: { month:[], daily:[], medical:[], edu:[], other:[] },
   vaccines: [],
   spendingBatchV1: false,
   growthRecords: [],
@@ -1508,7 +1507,7 @@ const weekTips = {
 let data = {};
 let currentInvTab = 'doc';
 let currentKnowTab = 'all';
-let currentSpendTab = 'prep';
+let currentSpendTab = 'month';
 let editingReportId = null;
 
 // ============ CLOUD SYNC LAYER ============
@@ -1526,8 +1525,9 @@ function normalizeData() {
   for (let k in defaultData) if (!(k in data)) data[k] = defaultData[k];
   for (let k in defaultInv) if (!data.inventory[k]) data.inventory[k] = [];
   for (let k of ['fang','hospBaby','hospMom','homeBaby','homeMom']) if (!data.inventory[k]) data.inventory[k] = [];
-  if (!data.spending) data.spending = { prep:[], month:[], daily:[], medical:[], edu:[], other:[] };
-  for (let k of ['prep','month','daily','medical','edu','other']) if (!data.spending[k]) data.spending[k] = [];
+  if (!data.spending) data.spending = { month:[], daily:[], medical:[], edu:[], other:[] };
+  for (let k of ['month','daily','medical','edu','other']) if (!data.spending[k]) data.spending[k] = [];
+  if (!data.spendingRemovePrep) { delete data.spending.prep; data.spendingRemovePrep = true; }
   if (!data.config.csectionDate) data.config.csectionDate = '';
   if (!data.config.lmpDate) data.config.lmpDate = calcLMP(data.config.dueDate);
   if (data.spendingBatchV1 === undefined) data.spendingBatchV1 = false;
@@ -2818,8 +2818,8 @@ function delNote(id) {
 }
 
 // ============ SPENDING LEDGER ============
-const spendCategories = {prep:'待产前置', month:'月子开销', daily:'日常刚需（奶粉/纸尿裤/洗护）', medical:'医疗体检', edu:'早教娱乐', other:'杂项'};
-const spendIcons = {prep:'🏥', month:'🌙', daily:'🍼', medical:'💊', edu:'🎨', other:'📦'};
+const spendCategories = {month:'月子开销', daily:'日常刚需（奶粉/纸尿裤/洗护）', medical:'医疗体检', edu:'早教娱乐', other:'杂项'};
+const spendIcons = {month:'🌙', daily:'🍼', medical:'💊', edu:'🎨', other:'📦'};
 
 function renderSpending() {
   renderSpendTabs();
@@ -2839,7 +2839,6 @@ function renderSpendTabs() {
   const container = document.getElementById('spendTabs');
   if (!container) return;
   const builtIn = [
-    {key:'prep', label:'🏥 待产前置'},
     {key:'month', label:'🌙 月子开销'},
     {key:'daily', label:'🍼 日常刚需'},
     {key:'medical', label:'💊 医疗健康'},
@@ -2855,18 +2854,18 @@ function renderSpendTabs() {
 
 // Get all spending category keys (built-in + custom)
 function getAllSpendKeys() {
-  return ['prep','month','daily','medical','edu','other', ...(data.customSpendCats||[]).map(c=>c.key)];
+  return ['month','daily','medical','edu','other', ...(data.customSpendCats||[]).map(c=>c.key)];
 }
 
 function getSpendCatLabel(key) {
-  const builtIn = {prep:'待产前置', month:'月子开销', daily:'日常刚需', medical:'医疗体检', edu:'早教娱乐', other:'杂项'};
+  const builtIn = {month:'月子开销', daily:'日常刚需', medical:'医疗体检', edu:'早教娱乐', other:'杂项'};
   if (builtIn[key]) return builtIn[key];
   const custom = (data.customSpendCats||[]).find(c => c.key === key);
   return custom ? custom.label : key;
 }
 
 function getSpendCatIcon(key) {
-  const builtIn = {prep:'🏥', month:'🌙', daily:'🍼', medical:'💊', edu:'🎨', other:'📦'};
+  const builtIn = {month:'🌙', daily:'🍼', medical:'💊', edu:'🎨', other:'📦'};
   if (builtIn[key]) return builtIn[key];
   const custom = (data.customSpendCats||[]).find(c => c.key === key);
   return custom ? custom.icon : '📦';
@@ -3102,9 +3101,6 @@ function batchImportSpendData() {
   if (data.spendingBatchV1) return; // already imported
   const dt = '2026-08-03';
   const batch = {
-    prep: [
-      {name:'产褥垫', amount:9.17, date:dt, note:'12片·待产包', isMilk:false, isDiaper:false},
-    ],
     month: [
       {name:'安心裤', amount:4.9, date:dt, note:'4条·产后护理', isMilk:false, isDiaper:false},
       {name:'会阴冲洗器', amount:15.9, date:dt, note:'1个·产后护理', isMilk:false, isDiaper:false},
@@ -3139,7 +3135,7 @@ function batchImportSpendData() {
     edu: [],
     other: []
   };
-  for (let k of ['prep','month','daily','medical','edu','other']) {
+  for (let k of ['month','daily','medical','edu','other']) {
     if (batch[k] && batch[k].length) data.spending[k] = data.spending[k].concat(batch[k]);
   }
   data.spendingBatchV1 = true;
@@ -3201,7 +3197,7 @@ function renderSpendCategoryBreakdown() {
   allKeys.forEach(k => {
     catTotals[k] = (data.spending[k]||[]).reduce((s, i) => s + (parseFloat(i.amount)||0), 0);
   });
-  const builtInColors = {prep:'#C47C5C', month:'#D4A574', daily:'#7BA87B', medical:'#7B9EB8', edu:'#C9986A', other:'#9C8B73'};
+  const builtInColors = {month:'#D4A574', daily:'#7BA87B', medical:'#7B9EB8', edu:'#C9986A', other:'#9C8B73'};
   const customColors = ['#9B7EBD','#6B9DBA','#C9986A','#7BA87B','#D4A574','#C47C5C'];
 
   let html = '<div style="display:flex;flex-direction:column;gap:10px">';
@@ -4293,7 +4289,7 @@ function delSpendCat(idx) {
   }
   // If currently on this tab, switch to first tab
   if (currentSpendTab === cat.key) {
-    currentSpendTab = 'prep';
+    currentSpendTab = 'month';
   }
   data.customSpendCats.splice(idx, 1);
   // Don't delete the spending array, just the category definition
