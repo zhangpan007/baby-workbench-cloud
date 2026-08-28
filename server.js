@@ -125,6 +125,8 @@ function githubApi(method, body) {
       res.setEncoding('utf8');
       res.on('data', (c) => { buf += c; });
       res.on('end', () => {
+        if (settled) return;
+        settled = true;
         clearTimeout(timer);
         resolve({
           status: res.statusCode,
@@ -136,8 +138,17 @@ function githubApi(method, body) {
     });
     // 关键：独立的外部定时器。仅用 req.setTimeout 无法覆盖 DNS 解析阶段的挂死
     // （此时尚未建立 socket），必须主动 destroy 才能在超时后 reject，避免无限挂起。
-    const timer = setTimeout(() => { req.destroy(new Error('GitHub request timeout')); }, GH_TIMEOUT_MS);
-    req.on('error', (e) => { clearTimeout(timer); reject(e); });
+    // 关键：定时器直接 reject，而非仅依赖 req.destroy() 触发 'error' 事件。
+    // 在 Render 等环境实测 req.destroy() 在连接/TLS 挂死阶段不会可靠地 emit 'error'，
+    // 导致 Promise 永远 pending；直接 reject 才能保证超时后必然收尾。
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      try { req.destroy(); } catch (e) {}
+      reject(new Error('GitHub request timeout'));
+    }, GH_TIMEOUT_MS);
+    req.on('error', (e) => { if (settled) return; settled = true; clearTimeout(timer); reject(e); });
     if (payload) req.write(payload);
     req.end();
   });
@@ -309,7 +320,7 @@ const server = http.createServer(async (req, res) => {
   if (u === '/api/status') {
     sendJSON(res, 200, {
       version: store.version, updatedAt: store.updatedAt, hasData: !!store.data, githubMode: USE_GITHUB,
-      serverBuild: 'fix3-timeout-v2',
+      serverBuild: 'fix4-direct-reject',
       gh: {
         repo: GITHUB_REPO, path: GITHUB_DATA_PATH,
         tokenMask: USE_GITHUB ? tokenMask(GITHUB_TOKEN) : '(no token)',
