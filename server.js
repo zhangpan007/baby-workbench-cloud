@@ -103,11 +103,21 @@ function decryptStr(str) {
 }
 
 // ---------------- GitHub Contents API ----------------
-async function githubApi(method, body) {
+// 关键加固：给外网请求加超时。Render 免费版对 api.github.com 的请求可能
+// 挂起（不返回也不报错），一旦挂起，串行队列会被永久堵死，导致后续所有写入
+// 都不执行（表现为内存有数据、GitHub 永远 404）。超时后 AbortController 抛错，
+// 被 _githubWriteOnce 的 catch 捕获并解除阻塞。
+async function githubApi(method, body, timeoutMs = 8000) {
   const url = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_DATA_PATH;
-  const opts = { method, headers: GH_HEADERS };
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), timeoutMs);
+  const opts = { method, headers: GH_HEADERS, signal: ac.signal };
   if (body) opts.body = JSON.stringify(body);
-  return fetch(url, opts);
+  try {
+    return await fetch(url, opts);
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 let githubSha = null; // 当前文件 SHA，用于更新时避免 409 冲突
@@ -131,7 +141,9 @@ async function githubRead() {
 
 // 串行化写入，避免并发更新互相覆盖
 let ghWriteQueue = Promise.resolve();
+let ghWriteAttempts = 0; // 同步计数器：确认 githubWrite 是否被调用（不依赖异步结果）
 function githubWrite(obj) {
+  ghWriteAttempts++;
   ghWriteQueue = ghWriteQueue.then(() => _githubWriteOnce(obj)).catch(() => {});
   return ghWriteQueue;
 }
@@ -274,6 +286,7 @@ const server = http.createServer(async (req, res) => {
       gh: {
         repo: GITHUB_REPO, path: GITHUB_DATA_PATH,
         tokenMask: USE_GITHUB ? tokenMask(GITHUB_TOKEN) : '(no token)',
+        writeAttempts: ghWriteAttempts,
         lastWriteOk: ghDiag.lastOk, lastWriteStatus: ghDiag.lastStatus,
         lastWriteErr: ghDiag.lastErr, lastWriteAt: ghDiag.lastAt
       }
@@ -330,6 +343,11 @@ async function start() {
   // sanity
   if (typeof store.version !== 'number') store.version = 0;
   if (!('data' in store)) store.data = null;
+  // 启动后强制把（可能来自明文种子的）数据以加密格式写回 GitHub，并刷新 SHA；
+  // 同时作为写入链路的冒烟测试，避免「内存有数据、GitHub 永远 404」的静默故障
+  if (USE_GITHUB && store.data) {
+    githubWrite(store);
+  }
   server.listen(PORT, () => {
     const mode = USE_GITHUB ? ('GitHub 持久化 -> ' + GITHUB_REPO + '/' + GITHUB_DATA_PATH) : '本地文件回退';
     console.log('宝宝工作台云端版已启动: http://localhost:' + PORT +
