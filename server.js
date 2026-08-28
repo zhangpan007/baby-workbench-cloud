@@ -125,6 +125,7 @@ function githubApi(method, body) {
       res.setEncoding('utf8');
       res.on('data', (c) => { buf += c; });
       res.on('end', () => {
+        clearTimeout(timer);
         resolve({
           status: res.statusCode,
           ok: res.statusCode >= 200 && res.statusCode < 300,
@@ -133,8 +134,10 @@ function githubApi(method, body) {
         });
       });
     });
-    req.on('error', reject);
-    req.setTimeout(GH_TIMEOUT_MS, () => { req.destroy(new Error('GitHub request timeout')); });
+    // 关键：独立的外部定时器。仅用 req.setTimeout 无法覆盖 DNS 解析阶段的挂死
+    // （此时尚未建立 socket），必须主动 destroy 才能在超时后 reject，避免无限挂起。
+    const timer = setTimeout(() => { req.destroy(new Error('GitHub request timeout')); }, GH_TIMEOUT_MS);
+    req.on('error', (e) => { clearTimeout(timer); reject(e); });
     if (payload) req.write(payload);
     req.end();
   });
@@ -169,7 +172,7 @@ function githubWrite(obj) {
 }
 async function _githubWriteOnce(obj) {
   const content = encryptObj(obj);
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < 3; attempt++) {
     const body = { message: 'sync: update baby-workbench store', content };
     if (githubSha) body.sha = githubSha; // 存在则带 SHA 更新
     try {
@@ -188,11 +191,14 @@ async function _githubWriteOnce(obj) {
       const txt = await r.text().catch(() => '');
       ghDiag.lastOk = false; ghDiag.lastStatus = r.status; ghDiag.lastErr = txt.slice(0, 200); ghDiag.lastAt = Date.now();
       console.error('[GH] 写入失败 status', r.status, txt.slice(0, 200));
+      return false;
     } catch (e) {
+      console.error('[GH] 写入异常 attempt', attempt, e.message);
+      // 超时 / 网络错误（如 DNS 阶段挂死）可能是间歇性的，重试一次
+      if (attempt < 2) { await new Promise((r) => setTimeout(r, 600)); continue; }
       ghDiag.lastOk = false; ghDiag.lastStatus = 0; ghDiag.lastErr = e.message; ghDiag.lastAt = Date.now();
-      console.error('[GH] 写入异常', e.message);
+      return false;
     }
-    return false;
   }
   return false;
 }
