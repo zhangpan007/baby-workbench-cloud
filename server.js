@@ -333,7 +333,6 @@ const server = http.createServer(async (req, res) => {
       serverBuild: 'fix4-direct-reject',
       gh: {
         repo: GITHUB_REPO, path: GITHUB_DATA_PATH,
-        tokenMask: USE_GITHUB ? tokenMask(GITHUB_TOKEN) : '(no token)',
         writeAttempts: ghWriteAttempts,
         lastWriteOk: ghDiag.lastOk, lastWriteStatus: ghDiag.lastStatus,
         lastWriteErr: ghDiag.lastErr, lastWriteAt: ghDiag.lastAt
@@ -380,24 +379,6 @@ const server = http.createServer(async (req, res) => {
     saveStore();
     broadcast();
     sendJSON(res, 200, { ok: true, version: store.version });
-    return;
-  }
-
-  // 临时诊断：直接测 GitHub 连通性 + 真实写入路径（带 sha 与真实加密载荷）
-  if (u === '/api/ghtest') {
-    (async () => {
-      const out = { githubMode: USE_GITHUB, hasData: !!store.data, sha: githubSha ? githubSha.slice(0, 8) : null };
-      try {
-        const r = await githubApi('GET');
-        out.get = { ok: r.ok, status: r.status };
-      } catch (e) { out.get = { error: e.message }; }
-      try {
-        const ok = await _githubWriteOnce(store);
-        out.writeResult = ok;
-        out.diag = { lastOk: ghDiag.lastOk, status: ghDiag.lastStatus, err: ghDiag.lastErr };
-      } catch (e) { out.writeError = e.message; }
-      sendJSON(res, 200, out);
-    })();
     return;
   }
 
