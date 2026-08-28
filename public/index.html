@@ -4645,6 +4645,8 @@ loadData();
   if (!ls && rec && rec.data) {
     data = rec.data;
   }
+  // 本机是否已有真实数据（用于下方判断以本机为准还是以云端为准）
+  const hadLocalData = !!(ls || (rec && rec.data));
 
   // 拉取服务状态与云端数据（云端为权威；为空则把本机数据播种到云端）
   try {
@@ -4658,8 +4660,17 @@ loadData();
   const cloud = await cloudLoad();
   if (cloud) {
     if (cloud.data && Object.keys(cloud.data).length) {
-      data = cloud.data;
-      normalizeData();
+      if (CLOUD.readonly) {
+        // 家人只读：直接采用云端权威数据
+        data = cloud.data;
+        normalizeData();
+      } else if (hadLocalData && CLOUD.ownerToken) {
+        // 管理设备且本机已有数据：以本机为准回推云端，避免云端旧版本覆盖本机较新编辑
+        cloudPush();
+      } else {
+        data = cloud.data;
+        normalizeData();
+      }
     } else if (!CLOUD.readonly && CLOUD.ownerToken) {
       cloudPush(); // 首次：把本机数据播种到云端（需已绑定口令）
     }
