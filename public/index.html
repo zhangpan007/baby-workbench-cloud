@@ -1516,7 +1516,8 @@ const CLOUD = {
   ownerToken: localStorage.getItem('babyOwnerToken') || '',
   readonly: false,
   version: 0,
-  status: 'init'
+  status: 'init',
+  githubMode: null // null=unknown, true=GitHub持久化, false=本地临时
 };
 let _savePushTimer = null;
 
@@ -1638,13 +1639,18 @@ function bindOwnerToken() {
   CLOUD.ownerToken = t.trim();
   localStorage.setItem('babyOwnerToken', CLOUD.ownerToken);
   CLOUD.readonly = false;
+  cloudSetStatus('syncing');
   cloudPush().then(() => {
     if (CLOUD.status === 'saved') {
-      showToast('✅ 已绑定为管理设备，本机可编辑');
+      showToast('✅ 已绑定为管理设备，数据已上传云端');
       closeModal();
       location.reload();
     } else {
-      showToast('❌ 口令校验失败，请确认与服务器 OWNER_TOKEN 一致');
+      // 校验失败：清除错误口令，避免后续误用
+      CLOUD.ownerToken = '';
+      localStorage.removeItem('babyOwnerToken');
+      showToast('❌ 口令校验失败，请确认与 Render 后台 OWNER_TOKEN 一致');
+      cloudSetStatus('online');
     }
   });
 }
@@ -4476,11 +4482,17 @@ function openSettings() {
     </div>
     <div style="background:#EAF3EC;padding:12px;border-radius:10px;margin:12px 0">
       <p style="font-weight:600;margin-bottom:6px">☁️ 云端账号（多端同步）</p>
+      <p style="font-size:12px;margin-bottom:8px">
+        ${CLOUD.githubMode === null ? '⏳ 正在检测存储模式…' : CLOUD.githubMode ? '🟢 当前为 <b>GitHub 持久化</b>，数据不会随重新部署丢失' : '🟡 当前为 <b>本地临时存储</b>，重新部署会清空数据，请检查 Render 的 GITHUB_TOKEN'}
+        <br>
+        ${CLOUD.ownerToken ? '✅ 本机已绑定管理设备' : '❌ 本机尚未绑定，修改仅存本地'}
+      </p>
       <div class="form-group" style="margin-bottom:8px">
         <label class="form-label">云端账号口令</label>
         <input type="text" class="form-input" id="setOwnerToken" value="${CLOUD.ownerToken}" placeholder="与服务器 OWNER_TOKEN 一致">
       </div>
-      <p style="font-size:12px;color:var(--text-l);margin-bottom:8px">🔑 在<strong>电脑客户端</strong>与 <strong>Safari 桌面 PWA</strong> 上输入<strong>同一个口令</strong>，即视为同一云端账号，两端数据实时互相同步。口令在部署后端时由 <code>OWNER_TOKEN</code> 设定。</p>
+      <p style="font-size:12px;color:var(--text-l);margin-bottom:8px">🔑 在<strong>电脑客户端</strong>与 <strong>Safari 桌面 PWA</strong> 上输入<strong>同一个口令</strong>，即视为同一云端账号，两端数据实时互相同步。</p>
+      <p style="font-size:12px;color:#C07B32;margin-bottom:8px;background:#FFF8EC;padding:8px;border-radius:6px">💡 不知道口令？打开 Render Dashboard → baby-workbench-cloud → Environment，找到 <code>OWNER_TOKEN</code> 的值，复制后粘贴到上方输入框。</p>
       <p style="font-size:12px;color:var(--text-l);margin-bottom:8px">家人只读链接：<br><code style="word-break:break-all">${location.origin + location.pathname}?view=1</code></p>
       <button class="btn btn-primary btn-block" onclick="bindOwnerToken()">🔑 绑定 / 校验云端账号</button>
       <button class="btn btn-outline btn-block" style="margin-top:8px" onclick="copyShareLink()">📋 复制家人只读链接</button>
@@ -4634,14 +4646,22 @@ loadData();
     data = rec.data;
   }
 
-  // 拉取云端数据（云端为权威；为空则把本机数据播种到云端）
+  // 拉取服务状态与云端数据（云端为权威；为空则把本机数据播种到云端）
+  try {
+    const statusRes = await fetch('/api/status', { cache: 'no-store' });
+    if (statusRes.ok) {
+      const statusJson = await statusRes.json();
+      CLOUD.githubMode = !!statusJson.githubMode;
+      CLOUD.version = statusJson.version || 0;
+    }
+  } catch (e) {}
   const cloud = await cloudLoad();
   if (cloud) {
     if (cloud.data && Object.keys(cloud.data).length) {
       data = cloud.data;
       normalizeData();
-    } else if (!CLOUD.readonly) {
-      cloudPush(); // 首次：把本机数据播种到云端
+    } else if (!CLOUD.readonly && CLOUD.ownerToken) {
+      cloudPush(); // 首次：把本机数据播种到云端（需已绑定口令）
     }
   }
 

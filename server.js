@@ -259,7 +259,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (u === '/api/status') {
-    sendJSON(res, 200, { version: store.version, updatedAt: store.updatedAt, hasData: !!store.data });
+    sendJSON(res, 200, { version: store.version, updatedAt: store.updatedAt, hasData: !!store.data, githubMode: USE_GITHUB });
     return;
   }
 
