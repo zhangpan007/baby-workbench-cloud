@@ -38,6 +38,13 @@ const USE_GITHUB = !!process.env.GITHUB_TOKEN;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const GITHUB_REPO = process.env.GITHUB_REPO || 'zhangpan007/baby-workbench-cloud';
 const GITHUB_DATA_PATH = process.env.GITHUB_DATA_PATH || 'cloud-data/store.json';
+// 诊断：记录最后一次 GitHub 写入结果，便于线上排查 token/权限问题
+const ghDiag = { lastOk: null, lastStatus: 0, lastErr: '', lastAt: 0 };
+function tokenMask(t) {
+  if (!t) return '(empty)';
+  if (t.length <= 12) return t.length + ' chars (too short)';
+  return t.slice(0, 12) + '…' + t.slice(-4) + ' (len=' + t.length + ')';
+}
 // 加密密钥：优先用专用密钥，缺失时回退 OWNER_TOKEN，保证本地/线上都能跑
 const DATA_ENC_KEY = process.env.DATA_ENC_KEY || OWNER_TOKEN;
 const GH_HEADERS = {
@@ -138,6 +145,7 @@ async function _githubWriteOnce(obj) {
       if (r.ok) {
         const j = await r.json();
         githubSha = j.content.sha;
+        ghDiag.lastOk = true; ghDiag.lastStatus = r.status; ghDiag.lastErr = ''; ghDiag.lastAt = Date.now();
         return true;
       }
       if (r.status === 409 || r.status === 422) {
@@ -146,8 +154,10 @@ async function _githubWriteOnce(obj) {
         continue;
       }
       const txt = await r.text().catch(() => '');
+      ghDiag.lastOk = false; ghDiag.lastStatus = r.status; ghDiag.lastErr = txt.slice(0, 200); ghDiag.lastAt = Date.now();
       console.error('[GH] 写入失败 status', r.status, txt.slice(0, 200));
     } catch (e) {
+      ghDiag.lastOk = false; ghDiag.lastStatus = 0; ghDiag.lastErr = e.message; ghDiag.lastAt = Date.now();
       console.error('[GH] 写入异常', e.message);
     }
     return false;
@@ -259,7 +269,15 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (u === '/api/status') {
-    sendJSON(res, 200, { version: store.version, updatedAt: store.updatedAt, hasData: !!store.data, githubMode: USE_GITHUB });
+    sendJSON(res, 200, {
+      version: store.version, updatedAt: store.updatedAt, hasData: !!store.data, githubMode: USE_GITHUB,
+      gh: {
+        repo: GITHUB_REPO, path: GITHUB_DATA_PATH,
+        tokenMask: USE_GITHUB ? tokenMask(GITHUB_TOKEN) : '(no token)',
+        lastWriteOk: ghDiag.lastOk, lastWriteStatus: ghDiag.lastStatus,
+        lastWriteErr: ghDiag.lastErr, lastWriteAt: ghDiag.lastAt
+      }
+    });
     return;
   }
 
