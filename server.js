@@ -373,6 +373,23 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 临时诊断：直接测一次 GitHub 连通性（GET 与 PUT），返回真实结果/错误
+  if (u === '/api/ghtest') {
+    (async () => {
+      const out = { githubMode: USE_GITHUB };
+      try {
+        const r = await githubApi('GET');
+        out.get = { ok: r.ok, status: r.status };
+      } catch (e) { out.get = { error: e.message }; }
+      try {
+        const r2 = await githubApi('PUT', { message: 'ghtest', content: 'eA==' });
+        out.put = { ok: r2.ok, status: r2.status };
+      } catch (e) { out.put = { error: e.message }; }
+      sendJSON(res, 200, out);
+    })();
+    return;
+  }
+
   serveStatic(req, res);
 });
 
