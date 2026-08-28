@@ -182,7 +182,11 @@ function githubWrite(obj) {
   return ghWriteQueue;
 }
 async function _githubWriteOnce(obj) {
-  const content = encryptObj(obj);
+  // GitHub Contents API 的 content 字段必须是「整个文件内容」的 Base64 编码。
+  // encryptObj 返回 "ENC1:<base64>" 明文字符串，必须整体再 Base64 一次，
+  // 否则 GitHub 报 422 "content is not valid Base64"（这正是此前写入始终失败的根因）。
+  const fileContent = encryptObj(obj);
+  const content = Buffer.from(fileContent, 'utf8').toString('base64');
   let lastBody = '';
   for (let attempt = 0; attempt < 3; attempt++) {
     const body = { message: 'sync: update baby-workbench store', content };
