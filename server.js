@@ -183,9 +183,11 @@ function githubWrite(obj) {
 }
 async function _githubWriteOnce(obj) {
   const content = encryptObj(obj);
+  let lastBody = '';
   for (let attempt = 0; attempt < 3; attempt++) {
     const body = { message: 'sync: update baby-workbench store', content };
     if (githubSha) body.sha = githubSha; // 存在则带 SHA 更新
+    else console.error('[GH] 警告：githubSha 为空，将导致 422');
     try {
       const r = await githubApi('PUT', body);
       if (r.ok) {
@@ -195,7 +197,9 @@ async function _githubWriteOnce(obj) {
         return true;
       }
       if (r.status === 409 || r.status === 422) {
-        // 冲突或缺少 SHA：重新拉取最新 SHA 后重试一次
+        // 冲突或缺少 SHA：记录响应体并重新拉取最新 SHA 后重试
+        lastBody = await r.text().catch(() => '');
+        console.error('[GH] 写入 409/422 attempt', attempt, 'githubSha=', githubSha ? githubSha.slice(0, 8) : '(null)', lastBody.slice(0, 200));
         await githubRead();
         continue;
       }
@@ -211,6 +215,8 @@ async function _githubWriteOnce(obj) {
       return false;
     }
   }
+  // 循环耗尽（多为反复 409/422）：记录最后一次响应体便于排查
+  ghDiag.lastOk = false; ghDiag.lastStatus = 422; ghDiag.lastErr = 'exhausted: ' + lastBody.slice(0, 200); ghDiag.lastAt = Date.now();
   return false;
 }
 
