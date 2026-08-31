@@ -61,17 +61,26 @@ body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3
 .home-hero::before{content:"";position:absolute;right:-46px;top:-46px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(242,182,176,.25),transparent 70%)}
 .home-hero::after{content:"";position:absolute;left:-40px;bottom:-56px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(169,198,232,.18),transparent 70%)}
 .home-hero>*{position:relative;z-index:1}
-.home-hero .hh-kicker{font-size:13px;color:var(--text-l);letter-spacing:2px;margin-bottom:6px}
-.home-hero .hh-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:2px;letter-spacing:1px}
-.home-hero .hh-days{font-size:52px;font-weight:800;line-height:1.15;color:var(--primary-d);font-family:var(--font-cute);margin:6px 0 2px;letter-spacing:1px}
-.home-hero .hh-days .unit{font-size:16px;font-weight:600;margin-left:2px}
-.home-hero .hh-meta{font-size:13px;color:var(--text-l);margin-top:8px}
-.home-hero .hh-week{display:inline-block;margin-top:10px;background:#fff;border:1px solid #F6DDD6;border-radius:20px;padding:5px 14px;font-size:13px;color:var(--primary-d);font-weight:600}
+..home-hero .hh-title{font-size:14.5px;font-weight:600;color:#8E8380;letter-spacing:.8px;margin:0 0 12px}
+.home-hero .hh-days{font-size:46px;font-weight:600;line-height:1.18;color:#E2958F;font-family:var(--font-cute);margin:0 0 16px;letter-spacing:.5px}
+.home-hero .hh-days .unit{font-size:15px;font-weight:500;margin-left:3px;color:#C99A95}
+.home-hero .hh-meta{display:flex;flex-direction:column;align-items:center;gap:8px;margin:0 0 14px}
+.home-hero .hh-line{font-size:12.5px;color:var(--text-l);line-height:1.5;letter-spacing:.4px}
+.home-hero .hh-line b{font-weight:600;color:#8E8380;margin-left:3px}
+.home-hero .hh-week{display:inline-block;background:rgba(255,255,255,.72);border:1px solid #F4E4DE;border-radius:20px;padding:4px 14px;font-size:12px;color:#AC9494;font-weight:500;letter-spacing:.5px}
 /* 筹备进度 */
 .prep-progress{background:var(--card);border-radius:22px;padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px}
 .prep-progress .pp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .prep-progress .pp-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
-.prep-progress .pp-title .ico{font-size:16px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:var(--primary-l);border-radius:10px}
+.prep-progress .pp-title .ico{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:var(--primary-l);border-radius:10px}
+.prep-progress .pp-title .ico svg{width:17px;height:17px}
+.warm-remind .wr-title .ico svg{width:17px;height:17px}
+.section-title .st-ico{display:inline-flex;vertical-align:-3px;margin-right:7px}
+.section-title .st-ico svg{width:18px;height:18px}
+.topbar .tb-icon{display:inline-flex;align-items:center}
+.topbar .tb-icon svg{width:18px;height:18px}
+.feature-hero .fh-emoji{display:inline-flex;align-items:center;justify-content:center}
+.feature-hero .fh-emoji svg{width:30px;height:30px}
 .prep-progress .pp-pct{font-size:15px;font-weight:800;color:var(--primary-d)}
 .prep-progress .pp-bar{background:var(--primary-l);border-radius:20px;height:12px;overflow:hidden;position:relative}
 .prep-progress .pp-fill{background:linear-gradient(90deg,#F2B6B0,#D98F8A);border-radius:20px;height:100%;transition:width .8s ease}
@@ -85,8 +94,9 @@ body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3
 .warm-remind .wr-item:active{transform:scale(.98)}
 .warm-remind .wr-item .wr-ico{font-size:16px;width:32px;height:32px;flex:none;display:inline-flex;align-items:center;justify-content:center;background:#FFF3E0;border-radius:10px}
 .warm-remind .wr-item .wr-text{font-size:13.5px;color:var(--text);flex:1;line-height:1.35}
-.warm-remind .wr-item .wr-days{font-size:12.5px;font-weight:700;color:#C98A4B;flex:none}
-.warm-remind .wr-item .wr-days.hot{color:#E07A5F}
+.warm-remind .wr-item .wr-days{font-size:12.5px;font-weight:500;color:#B49A7E;flex:none}
+.warm-remind .wr-item .wr-days.hot{color:#C88F55;font-weight:600}
+.warm-remind .wr-item .wr-ico svg{width:17px;height:17px}
 .warm-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.75);border:1px solid #F6E2C8;margin-bottom:8px}
 .warm-item:last-child{margin-bottom:0}
 .warm-item .wi-ico{font-size:16px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;flex-shrink:0}
@@ -99,7 +109,8 @@ body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .quick-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s,box-shadow .18s;overflow:hidden;text-align:left}
 .quick-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
-.quick-card .qc-ico{font-size:22px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:14px;margin-bottom:8px}
+.quick-card .qc-ico{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:14px;margin-bottom:9px}
+.quick-card .qc-ico svg{width:23px;height:23px}
 .quick-card .qc-name{font-size:14px;font-weight:700;color:var(--text);display:block}
 .quick-card .qc-sub{font-size:12px;color:var(--text-l);margin-top:2px;display:block}
 /* ===== 功能收纳页 ===== */
@@ -112,14 +123,16 @@ body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3
 .feature-card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
 .feature-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .feature-card::after{content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--text-h)}
-.feature-card .fc-ico{font-size:22px;width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;border-radius:15px;flex-shrink:0}
+.feature-card .fc-ico{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;border-radius:15px;flex-shrink:0}
+.feature-card .fc-ico svg{width:24px;height:24px}
 .feature-card .fc-info{flex:1;min-width:0}
 .feature-card .fc-name{font-size:15px;font-weight:700;color:var(--text)}
 .feature-card .fc-sub{font-size:12px;color:var(--text-l);margin-top:2px}
 .feature-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;padding-top:16px;border-top:1px dashed var(--border)}
 .feature-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 8px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s;font-size:12px;color:var(--text-l)}
 .feature-action:hover{transform:translateY(-2px)}
-.feature-action .fa-ico{font-size:20px}
+.feature-action .fa-ico{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center}
+.feature-action .fa-ico svg{width:22px;height:22px}
 /* 子功能返回条 */
 .sub-back{display:flex;align-items:center;gap:8px;margin:0 auto 12px;max-width:560px;padding:4px 2px}
 .sub-back button{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:30px;padding:7px 14px;font-size:13px;color:var(--text-l);transition:all .18s;box-shadow:var(--shadow)}
@@ -625,11 +638,11 @@ input[type="date"]:focus,input[type="datetime-local"]:focus{border-color:var(--p
   .main-content{padding:24px 24px 30px;padding-top:96px}
 }
 /* ===== Cloud sync UI ===== */
-.cloud-status{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;padding:4px 10px;border-radius:20px;background:var(--primary-l);color:var(--primary-d);white-space:nowrap;pointer-events:none;font-weight:500;box-shadow:inset 0 0 0 1px var(--border)}
-.cloud-status.cs-readonly{background:rgba(255,250,240,.92);color:#7a5c34}
-.cloud-status.cs-offline{background:#FBEAE0;color:#C0612E}
-.cloud-status.cs-syncing{background:#EAF3EC;color:#3f7d52}
-.cloud-status.cs-saved{background:#EAF3EC;color:#3f7d52}
+.cloud-status{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11.5px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.7);color:#9E938E;white-space:nowrap;pointer-events:none;font-weight:400;letter-spacing:.3px;opacity:.72;box-shadow:inset 0 0 0 1px #F0E6E1}
+.cloud-status.cs-readonly{background:rgba(255,250,240,.9);color:#8E7A60}
+.cloud-status.cs-offline{background:#FBF2EB;color:#AC7D5E}
+.cloud-status.cs-syncing{background:#F2F7F3;color:#6B8F7A}
+.cloud-status.cs-saved{background:#F2F7F3;color:#6B8F7A}
 #readonlyBanner{display:none;background:#F7F0E5;color:#7a5c34;font-size:13px;text-align:center;padding:8px 14px;border-bottom:1px solid var(--border);font-weight:500;position:relative;z-index:99}
 #cloudBindBanner{display:none;background:#EAF3EC;color:#3f7d52;font-size:12.5px;text-align:center;padding:7px 14px;border-bottom:1px solid rgba(143,181,140,.5);font-weight:500;cursor:pointer;position:relative;z-index:99}
 #cloudBindBanner:hover{filter:brightness(.98)}
@@ -639,17 +652,14 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 .bottom-tabbar{display:none}
 @media(max-width:768px){
   .bottom-tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(92,80,134,.07);padding-bottom:env(safe-area-inset-bottom)}
-  .btab{--nc:var(--c-dash);flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;background:none;border:none;color:var(--text-l);font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;transition:color .15s}
-  .btab[data-tab="prepare"]{--nc:var(--c-inv)}
-  .btab[data-tab="mom"]{--nc:var(--c-checkup)}
-  .btab[data-tab="baby"]{--nc:var(--c-growth)}
-  .btab[data-tab="family"]{--nc:var(--c-spend)}
-  .btab .btab-ico{width:22px;height:22px;display:block;margin:0 auto;transition:transform .15s;color:currentColor}
-  .btab .btab-sub{font-size:9px;color:var(--text-h);letter-spacing:.3px;line-height:1.2}
-  .btab.active .btab-sub{color:var(--nc)}
-  .btab.active{color:var(--nc);font-weight:600}
+  .btab{--nc:#D98F8A;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 6px;background:none;border:none;color:#B6AEA8;font-size:11px;font-weight:400;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;transition:color .18s}
+  .btab .btab-ico{width:23px;height:23px;display:block;margin:0 auto;transition:transform .18s;color:currentColor}
+  .btab .btab-ico svg{width:100%;height:100%;display:block}
+  .btab .btab-sub{font-size:9px;color:#C5BEb8;letter-spacing:.3px;line-height:1.2;transition:color .18s}
+  .btab.active .btab-sub{color:#CBA6A2;font-weight:400}
+  .btab.active{color:var(--nc);font-weight:500}
   .btab.active .btab-ico{transform:translateY(-1px)}
-  .btab.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:22px;height:3px;border-radius:0 0 6px 6px;background:var(--nc);opacity:.85}
+  .btab.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:2.5px;border-radius:0 0 6px 6px;background:var(--nc);opacity:.55}
   .main-content{padding-bottom:84px}
 }
 </style>
@@ -658,7 +668,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
 <!-- Top bar — visible on ALL screen sizes -->
 <div class="topbar">
-  <span class="topbar-title"><span class="tb-icon">👶</span>我们的小宝贝</span>
+  <span class="topbar-title"><span class="tb-icon" data-icon="baby"></span>我们的小宝贝</span>
   <span class="cloud-status cs-init" id="cloudStatus">☁️ 连接中…</span>
 </div>
 <div id="readonlyBanner">👀 家人只读视图 · 数据由管理员实时同步，无法修改</div>
@@ -673,17 +683,19 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <section class="view active" id="view-home">
     <!-- 倒计时 -->
     <div class="home-hero">
-      <div class="hh-kicker">✨ 我们的小宝贝</div>
       <div class="hh-title">距离和小宝贝见面还有</div>
       <div class="hh-days"><span id="homeDaysLeft">--</span><span class="unit">天</span></div>
-      <div class="hh-meta">预产期 <span id="homeDueDate">2026年10月26日</span><span id="homeCsecWrap" style="display:none"> · 计划剖腹产 <span id="homeCsecDate"></span></span></div>
+      <div class="hh-meta">
+        <div class="hh-line">预产期 <b id="homeDueDate">2026-10-26</b></div>
+        <div class="hh-line" id="homeCsecWrap" style="display:none">计划剖腹产 <b id="homeCsecDate"></b></div>
+      </div>
       <div class="hh-week" id="homeWeek">第 -- 周</div>
     </div>
 
     <!-- 全家为爱筹备进度 -->
     <div class="prep-progress">
       <div class="pp-head">
-        <div class="pp-title"><span class="ico">🎀</span> 全家为爱筹备进度</div>
+        <div class="pp-title"><span class="ico" data-icon="ribbon"></span> 全家为爱筹备进度</div>
         <div class="pp-pct" id="prepPct">0%</div>
       </div>
       <div class="pp-bar"><div class="pp-fill" id="prepFill" style="width:0%"></div></div>
@@ -692,27 +704,27 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
     <!-- 暖心提醒（柔和浅橙） -->
     <div class="warm-remind">
-      <div class="wr-title"><span class="ico">💛</span> 暖心提醒</div>
+      <div class="wr-title"><span class="ico" data-icon="bell"></span> 暖心提醒</div>
       <div id="warmRemindList"><p style="font-size:13px;color:var(--text-l);text-align:center;padding:6px 0">正在整理贴心提醒…</p></div>
     </div>
 
     <!-- 4 个快捷卡片 -->
     <div class="quick-grid">
-      <div class="quick-card" onclick="openFeature('inventory')"><span class="qc-ico" style="background:#EAF5EE;color:var(--c-inv)">🧺</span><span class="qc-name">待产筹备</span><span class="qc-sub">物资 · 效期 · 护理计划</span></div>
-      <div class="quick-card" onclick="openFeature('checkup')"><span class="qc-ico" style="background:#FDF0EE;color:var(--c-checkup)">🤰</span><span class="qc-name">妈妈专区</span><span class="qc-sub">产检 · 育儿知识</span></div>
-      <div class="quick-card" onclick="openFeature('growth')"><span class="qc-ico" style="background:#EAF7F3;color:var(--c-growth)">🌱</span><span class="qc-name">宝宝成长</span><span class="qc-sub">时光档案 · 疫苗儿保</span></div>
-      <div class="quick-card" onclick="openFeature('spending')"><span class="qc-ico" style="background:#FDF0F2;color:var(--c-spend)">🎁</span><span class="qc-name">全家记录</span><span class="qc-sub">为爱花销 · 暖心提醒</span></div>
+      <div class="quick-card" onclick="openFeature('inventory')"><span class="qc-ico" style="background:#EAF5EE;color:var(--c-inv)" data-icon="basket"></span><span class="qc-name">待产筹备</span><span class="qc-sub">物资 · 效期 · 护理计划</span></div>
+      <div class="quick-card" onclick="openFeature('checkup')"><span class="qc-ico" style="background:#FDF0EE;color:var(--c-checkup)" data-icon="mom"></span><span class="qc-name">妈妈专区</span><span class="qc-sub">产检 · 育儿知识</span></div>
+      <div class="quick-card" onclick="openFeature('growth')"><span class="qc-ico" style="background:#EAF7F3;color:var(--c-growth)" data-icon="sprout"></span><span class="qc-name">宝宝成长</span><span class="qc-sub">时光档案 · 疫苗儿保</span></div>
+      <div class="quick-card" onclick="openFeature('spending')"><span class="qc-ico" style="background:#FDF0F2;color:var(--c-spend)" data-icon="gift"></span><span class="qc-name">全家记录</span><span class="qc-sub">为爱花销 · 暖心提醒</span></div>
     </div>
   </section>
 
   <!-- ===== 待产筹备（收纳页） ===== -->
   <section class="view" id="view-prepare">
     <div class="feature-page">
-      <div class="feature-hero"><span class="fh-emoji">🧺</span><div class="fh-title">待产筹备</div><div class="fh-sub">为小宝贝的来临，全家一起准备</div></div>
+      <div class="feature-hero"><span class="fh-emoji" data-icon="basket"></span><div class="fh-title">待产筹备</div><div class="fh-sub">为小宝贝的来临，全家一起准备</div></div>
       <div class="feature-grid">
-        <div class="feature-card" onclick="openFeature('inventory')"><span class="fc-ico" style="background:#EAF5EE;color:var(--c-inv)">🧺</span><div class="fc-info"><div class="fc-name">全家待产物资筹备</div><div class="fc-sub">妈妈 · 宝宝 · 证件 · 剖腹产物资清单</div></div></div>
-        <div class="feature-card" onclick="openFeature('expiry')"><span class="fc-ico" style="background:#FBF2E4;color:var(--c-expiry)">⏳</span><div class="fc-info"><div class="fc-name">物品效期提醒</div><div class="fc-sub">奶瓶 · 药品 · 纸尿裤临期一目了然</div></div></div>
-        <div class="feature-card" onclick="openFeature('newborn')"><span class="fc-ico" style="background:#F3EBFA;color:var(--c-newborn)">🍼</span><div class="fc-info"><div class="fc-name">新生儿护理计划</div><div class="fc-sub">喂养 · 睡眠 · 护理贴心规划</div></div></div>
+        <div class="feature-card" onclick="openFeature('inventory')"><span class="fc-ico" style="background:#EAF5EE;color:var(--c-inv)" data-icon="basket"></span><div class="fc-info"><div class="fc-name">全家待产物资筹备</div><div class="fc-sub">妈妈 · 宝宝 · 证件 · 剖腹产物资清单</div></div></div>
+        <div class="feature-card" onclick="openFeature('expiry')"><span class="fc-ico" style="background:#FBF2E4;color:var(--c-expiry)" data-icon="clock"></span><div class="fc-info"><div class="fc-name">物品效期提醒</div><div class="fc-sub">奶瓶 · 药品 · 纸尿裤临期一目了然</div></div></div>
+        <div class="feature-card" onclick="openFeature('newborn')"><span class="fc-ico" style="background:#F3EBFA;color:var(--c-newborn)" data-icon="bottle"></span><div class="fc-info"><div class="fc-name">新生儿护理计划</div><div class="fc-sub">喂养 · 睡眠 · 护理贴心规划</div></div></div>
       </div>
     </div>
   </section>
@@ -720,10 +732,10 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== 妈妈专区（收纳页） ===== -->
   <section class="view" id="view-mom">
     <div class="feature-page">
-      <div class="feature-hero"><span class="fh-emoji">🤰</span><div class="fh-title">妈妈专区</div><div class="fh-sub">每一份产检记录，都是爱的见证</div></div>
+      <div class="feature-hero"><span class="fh-emoji" data-icon="mom"></span><div class="fh-title">妈妈专区</div><div class="fh-sub">每一份产检记录，都是爱的见证</div></div>
       <div class="feature-grid">
-        <div class="feature-card" onclick="openFeature('checkup')"><span class="fc-ico" style="background:#FDF0EE;color:var(--c-checkup)">📋</span><div class="fc-info"><div class="fc-name">妈妈孕期产检记录</div><div class="fc-sub">产检项目 · 检查结果 · 倒计时</div></div></div>
-        <div class="feature-card" onclick="openFeature('knowledge')"><span class="fc-ico" style="background:#FBF3DC;color:var(--c-knowledge)">📚</span><div class="fc-info"><div class="fc-name">育儿知识宝典</div><div class="fc-sub">孕期到育儿的知识收藏与笔记</div></div></div>
+        <div class="feature-card" onclick="openFeature('checkup')"><span class="fc-ico" style="background:#FDF0EE;color:var(--c-checkup)" data-icon="clipboard"></span><div class="fc-info"><div class="fc-name">妈妈孕期产检记录</div><div class="fc-sub">产检项目 · 检查结果 · 倒计时</div></div></div>
+        <div class="feature-card" onclick="openFeature('knowledge')"><span class="fc-ico" style="background:#FBF3DC;color:var(--c-knowledge)" data-icon="book"></span><div class="fc-info"><div class="fc-name">育儿知识宝典</div><div class="fc-sub">孕期到育儿的知识收藏与笔记</div></div></div>
       </div>
     </div>
   </section>
@@ -731,10 +743,10 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== 宝宝成长（收纳页） ===== -->
   <section class="view" id="view-baby">
     <div class="feature-page">
-      <div class="feature-hero"><span class="fh-emoji">👶</span><div class="fh-title">宝宝成长</div><div class="fh-sub">记录小宝贝每一天的变化与成长</div></div>
+      <div class="feature-hero"><span class="fh-emoji" data-icon="baby"></span><div class="fh-title">宝宝成长</div><div class="fh-sub">记录小宝贝每一天的变化与成长</div></div>
       <div class="feature-grid">
-        <div class="feature-card" onclick="openFeature('growth')"><span class="fc-ico" style="background:#EAF7F3;color:var(--c-growth)">🌱</span><div class="fc-info"><div class="fc-name">宝贝成长时光档案</div><div class="fc-sub">身高体重 · 头围 · 成长曲线</div></div></div>
-        <div class="feature-card" onclick="openFeature('babycheck')"><span class="fc-ico" style="background:#EAF2FB;color:var(--c-babycheck)">💉</span><div class="fc-info"><div class="fc-name">宝宝疫苗&儿保记录</div><div class="fc-sub">疫苗针次 · 儿保检查 · 下次提醒</div></div></div>
+        <div class="feature-card" onclick="openFeature('growth')"><span class="fc-ico" style="background:#EAF7F3;color:var(--c-growth)" data-icon="sprout"></span><div class="fc-info"><div class="fc-name">宝贝成长时光档案</div><div class="fc-sub">身高体重 · 头围 · 成长曲线</div></div></div>
+        <div class="feature-card" onclick="openFeature('babycheck')"><span class="fc-ico" style="background:#EAF2FB;color:var(--c-babycheck)" data-icon="syringe"></span><div class="fc-info"><div class="fc-name">宝宝疫苗&儿保记录</div><div class="fc-sub">疫苗针次 · 儿保检查 · 下次提醒</div></div></div>
       </div>
     </div>
   </section>
@@ -742,16 +754,16 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== 全家记录（收纳页） ===== -->
   <section class="view" id="view-family">
     <div class="feature-page">
-      <div class="feature-hero"><span class="fh-emoji">💛</span><div class="fh-title">全家记录</div><div class="fh-sub">把为爱付出的点点滴滴都收好</div></div>
+      <div class="feature-hero"><span class="fh-emoji" data-icon="bell"></span><div class="fh-title">全家记录</div><div class="fh-sub">把为爱付出的点点滴滴都收好</div></div>
       <div class="feature-grid">
-        <div class="feature-card" onclick="openFeature('spending')"><span class="fc-ico" style="background:#FDF0F2;color:var(--c-spend)">🎁</span><div class="fc-info"><div class="fc-name">全家为爱花销记录</div><div class="fc-sub">消费台账 · 奶粉纸尿裤专项统计</div></div></div>
-        <div class="feature-card" onclick="openFeature('reminders')"><span class="fc-ico" style="background:#F6ECF7;color:var(--c-remind)">💛</span><div class="fc-info"><div class="fc-name">家庭暖心提醒</div><div class="fc-sub">自定义重要日子与待办提醒</div></div></div>
+        <div class="feature-card" onclick="openFeature('spending')"><span class="fc-ico" style="background:#FDF0F2;color:var(--c-spend)" data-icon="gift"></span><div class="fc-info"><div class="fc-name">全家为爱花销记录</div><div class="fc-sub">消费台账 · 奶粉纸尿裤专项统计</div></div></div>
+        <div class="feature-card" onclick="openFeature('reminders')"><span class="fc-ico" style="background:#F6ECF7;color:var(--c-remind)" data-icon="bell"></span><div class="fc-info"><div class="fc-name">家庭暖心提醒</div><div class="fc-sub">自定义重要日子与待办提醒</div></div></div>
       </div>
       <div class="feature-actions">
-        <div class="feature-action" onclick="shareData()"><span class="fa-ico">👨‍👩‍👧</span><span>分享给家人<br>一起守护宝贝</span></div>
-        <div class="feature-action" onclick="document.getElementById('importFile').click()"><span class="fa-ico">📂</span><span>导入数据</span></div>
-        <div class="feature-action" onclick="exportAllData()"><span class="fa-ico">💾</span><span>导出数据</span></div>
-        <div class="feature-action" onclick="openSettings()"><span class="fa-ico">⚙️</span><span>设置</span></div>
+        <div class="feature-action" onclick="shareData()"><span class="fa-ico" data-icon="family"></span><span>分享给家人<br>一起守护宝贝</span></div>
+        <div class="feature-action" onclick="document.getElementById('importFile').click()"><span class="fa-ico" data-icon="import"></span><span>导入数据</span></div>
+        <div class="feature-action" onclick="exportAllData()"><span class="fa-ico" data-icon="export"></span><span>导出数据</span></div>
+        <div class="feature-action" onclick="openSettings()"><span class="fa-ico" data-icon="settings"></span><span>设置</span></div>
       </div>
     </div>
   </section>
@@ -760,7 +772,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Inventory ===== -->
   <section class="view" id="view-inventory">
     <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
-    <h2 class="section-title">🧺 全家待产物资筹备</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="basket"></span>全家待产物资筹备</h2>
     
     <div class="inv-summary" id="invSummary">
       <div class="inv-summary-item"><div class="num" id="invTotalItems">0</div><div class="label">总物品</div></div>
@@ -830,7 +842,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Checkup ===== -->
   <section class="view" id="view-checkup">
     <div class="sub-back"><button onclick="goTab('mom')">‹ 返回妈妈专区</button></div>
-    <h2 class="section-title">📋 妈妈孕期产检记录</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="clipboard"></span>妈妈孕期产检记录</h2>
 
     <div class="card" style="border-left:4px solid var(--primary-d)" id="momCheckStats">计算中...</div>
 
@@ -885,7 +897,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Baby Check & Vaccine ===== -->
   <section class="view" id="view-babycheck">
     <div class="sub-back"><button onclick="goTab('baby')">‹ 返回宝宝成长</button></div>
-    <h2 class="section-title">💉 宝宝疫苗&儿保记录</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="syringe"></span>宝宝疫苗&儿保记录</h2>
 
     <div class="card" style="border-left:4px solid var(--info)" id="babyCheckStats">计算中...</div>
 
@@ -947,7 +959,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Expiry Tracking ===== -->
   <section class="view" id="view-expiry">
     <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
-    <h2 class="section-title">⏳ 物品效期提醒</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="clock"></span>物品效期提醒</h2>
 
     <div class="inv-summary">
       <div class="inv-summary-item"><div class="num" id="expiryTotal">0</div><div class="label">已登记</div></div>
@@ -969,7 +981,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Newborn Plan ===== -->
   <section class="view" id="view-newborn">
     <div class="sub-back"><button onclick="goTab('prepare')">‹ 返回待产筹备</button></div>
-    <h2 class="section-title">🍼 新生儿护理计划</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="bottle"></span>新生儿护理计划</h2>
 
     <div class="card">
       <div class="card-title"><span class="icon">🍼</span> 纯奶粉喂养参考方案</div>
@@ -1033,7 +1045,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Knowledge ===== -->
   <section class="view" id="view-knowledge">
     <div class="sub-back"><button onclick="goTab('mom')">‹ 返回妈妈专区</button></div>
-    <h2 class="section-title">📚 育儿知识宝典</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="book"></span>育儿知识宝典</h2>
 
     <div class="card">
       <div class="form-row">
@@ -1077,7 +1089,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Baby Growth Archive ===== -->
   <section class="view" id="view-growth">
     <div class="sub-back"><button onclick="goTab('baby')">‹ 返回宝宝成长</button></div>
-    <h2 class="section-title">🌱 宝贝成长时光档案</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="sprout"></span>宝贝成长时光档案</h2>
 
     <div class="growth-tab-bar">
       <span class="growth-tab-btn active" onclick="switchGrowthTab('growth',this)">📊 身高体重打卡</span>
@@ -1207,7 +1219,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Custom Reminders ===== -->
   <section class="view" id="view-reminders">
     <div class="sub-back"><button onclick="goTab('family')">‹ 返回全家记录</button></div>
-    <h2 class="section-title">💛 家庭暖心提醒</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="bell"></span>家庭暖心提醒</h2>
 
     <div class="inv-summary">
       <div class="inv-summary-item"><div class="num" id="rmTotal">0</div><div class="label">总提醒</div></div>
@@ -1257,7 +1269,7 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
   <!-- ===== Spending Ledger ===== -->
   <section class="view" id="view-spending">
     <div class="sub-back"><button onclick="goTab('family')">‹ 返回全家记录</button></div>
-    <h2 class="section-title">🎁 全家为爱花销记录</h2>
+    <h2 class="section-title"><span class="st-ico" data-icon="gift"></span>全家为爱花销记录</h2>
 
     <!-- Summary stats: top full-width total -->
     <div class="spend-total">
@@ -1397,11 +1409,11 @@ body.cloud-readonly input,body.cloud-readonly select,body.cloud-readonly textare
 
 <!-- Mobile bottom tab bar -->
 <nav class="bottom-tabbar" id="bottomTabbar">
-  <button class="btab active" data-tab="home" onclick="goTab('home')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span class="btab-label">首页</span><span class="btab-sub">我们的小宝贝</span></button>
-  <button class="btab" data-tab="prepare" onclick="goTab('prepare')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l1.5 11a1 1 0 0 1-1 1H4.5a1 1 0 0 1-1-1z"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2"/></svg><span class="btab-label">待产筹备</span></button>
-  <button class="btab" data-tab="mom" onclick="goTab('mom')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5S4 16.8 4 11.7A4 4 0 0 1 8 7.7c1.6 0 2.8.9 4 2.4 1.2-1.5 2.4-2.4 4-2.4a4 4 0 0 1 4 4c0 5.1-8 9.8-8 9.8z"/></svg><span class="btab-label">妈妈专区</span></button>
-  <button class="btab" data-tab="baby" onclick="goTab('baby')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="5.5" ry="8"/><circle cx="8.5" cy="8" r="2"/><circle cx="12" cy="6.5" r="2.2"/><circle cx="15.5" cy="8" r="1.8"/></svg><span class="btab-label">宝宝成长</span></button>
-  <button class="btab" data-tab="family" onclick="goTab('family')"><svg class="btab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="2.6"/><path d="M3.5 17.5c0-2.8 2-4.5 4.5-4.5s4.5 1.7 4.5 4.5"/><circle cx="16.5" cy="8.5" r="2"/><path d="M13.5 16.8c.3-2.2 1.8-3.6 3.8-3.6s3.5 1.4 3.7 3.6"/></svg><span class="btab-label">全家记录</span></button>
+  <button class="btab active" data-tab="home" onclick="goTab('home')"><span class="btab-ico" data-icon="home"></span><span class="btab-label">首页</span><span class="btab-sub">我们的小宝贝</span></button>
+  <button class="btab" data-tab="prepare" onclick="goTab('prepare')"><span class="btab-ico" data-icon="package"></span><span class="btab-label">待产筹备</span></button>
+  <button class="btab" data-tab="mom" onclick="goTab('mom')"><span class="btab-ico" data-icon="heart"></span><span class="btab-label">妈妈专区</span></button>
+  <button class="btab" data-tab="baby" onclick="goTab('baby')"><span class="btab-ico" data-icon="footprint"></span><span class="btab-label">宝宝成长</span></button>
+  <button class="btab" data-tab="family" onclick="goTab('family')"><span class="btab-ico" data-icon="family"></span><span class="btab-label">全家记录</span></button>
 </nav>
 
 <!-- Modal -->
@@ -1594,7 +1606,7 @@ function cloudSetStatus(s, msg) {
   CLOUD.status = s;
   const el = document.getElementById('cloudStatus');
   if (!el) return;
-  const map = { init:'☁️ 连接中…', online:'☁️ 云端已同步', offline:'⚠️ 离线（本地）', readonly:'👀 家人只读', syncing:'☁️ 同步中…', saved:'✅ 已存云端' };
+  const map = { init:'连接中…', online:'云端已同步', offline:'离线（本地）', readonly:'家人只读', syncing:'同步中…', saved:'已存云端' };
   el.className = 'cloud-status cs-' + s;
   el.textContent = msg || map[s] || s;
 }
@@ -1935,7 +1947,7 @@ function renderWarmRemind() {
     .filter(c => c._d >= 0 && c._d <= 30)
     .sort((a,b) => a._d - b._d)
     .slice(0, 2)
-    .forEach(c => items.push({ emoji:'🩺', title:`产检 · ${c.item || c.week}`, days:c._d, view:'checkup' }));
+    .forEach(c => items.push({ icon:'stethoscope', title:`产检 · ${c.item || c.week}`, days:c._d, view:'checkup' }));
   // 物品效期（30 天内）
   const expItems = [];
   ['doc','csec','fang','hospBaby','hospMom','homeBaby','homeMom','mom','baby'].forEach(t =>
@@ -1947,21 +1959,21 @@ function renderWarmRemind() {
     .filter(i => i._d >= 0 && i._d <= 30)
     .sort((a,b) => a._d - b._d)
     .slice(0, 2)
-    .forEach(i => items.push({ emoji:'⏳', title:`效期 · ${i.name}`, days:i._d, view:'expiry' }));
+    .forEach(i => items.push({ icon:'clock', title:`效期 · ${i.name}`, days:i._d, view:'expiry' }));
   // 疫苗（7 天内 / 已过期未种）
   (data.vaccines || []).filter(v => !v.done && v.date)
     .map(v => ({...v, _d: daysTo(v.date)}))
     .filter(v => v._d <= 7)
     .sort((a,b) => a._d - b._d)
     .slice(0, 2)
-    .forEach(v => items.push({ emoji:'💉', title:`疫苗 · ${v.name}`, days:v._d, view:'babycheck' }));
+    .forEach(v => items.push({ icon:'syringe', title:`疫苗 · ${v.name}`, days:v._d, view:'babycheck' }));
   // 自定义提醒（7 天内）
   (data.customReminders || []).filter(r => !r.done && r.date)
     .map(r => ({...r, _d: daysTo(r.date)}))
     .filter(r => r._d >= 0 && r._d <= 7)
     .sort((a,b) => a._d - b._d)
     .slice(0, 2)
-    .forEach(r => items.push({ emoji:'💛', title:r.title, days:r._d, view:'reminders' }));
+    .forEach(r => items.push({ icon:'bell', title:r.title, days:r._d, view:'reminders' }));
   if (items.length === 0) {
     list.innerHTML = '<p style="font-size:13px;color:var(--text-l);text-align:center;padding:8px 0">最近没有待办提醒，一切安好 ☁️</p>';
     return;
@@ -1970,11 +1982,12 @@ function renderWarmRemind() {
     const urgent = it.days <= 3;
     const dayTxt = it.days === 0 ? '今天' : it.days === 1 ? '明天' : `${it.days} 天后`;
     return `<div class="wr-item" onclick="openFeature('${it.view}')">
-      <span class="wr-ico">${it.emoji}</span>
+      <span class="wr-ico" data-icon="${it.icon}"></span>
       <span class="wr-text">${it.title}</span>
       <span class="wr-days${urgent ? ' hot' : ''}">${dayTxt}</span>
     </div>`;
   }).join('');
+  initIcons();
 }
 
 // 旧 dashboard 渲染已由 renderHome 取代，保留别名兼容历史调用
@@ -4742,6 +4755,41 @@ setInterval(() => {
   saveData();
 }, 30000);
 
+
+// ============ 柔和线性图标库（统一替换像素风 emoji） ============
+const ICON_SVG = {
+  baby: '<path d="M12 3.4a8.6 8.6 0 1 0 0 17.2 8.6 8.6 0 0 0 0-17.2z"/><circle cx="9.6" cy="10.4" r="1" fill="currentColor" stroke="none"/><circle cx="14.4" cy="10.4" r="1" fill="currentColor" stroke="none"/><path d="M9.5 14.3a3.2 3.2 0 0 0 5 0"/>',
+  home: '<path d="M4.2 10.9 12 5l7.8 5.9v7.7a1.5 1.5 0 0 1-1.5 1.5H5.7a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M9.6 20.1v-5.1h4.8v5.1"/>',
+  package: '<path d="M5.6 9.4h12.8l1 9.2a1.4 1.4 0 0 1-1.4 1.6H6a1.4 1.4 0 0 1-1.4-1.6z"/><path d="M8.7 9.4V7.3A3.3 3.3 0 0 1 12 4a3.3 3.3 0 0 1 3.3 3.3v2.1"/><path d="M5.6 13.6h12.8"/>',
+  heart: '<path d="M12 20.2s-6.4-3.9-6.4-8.4A3.5 3.5 0 0 1 9 8.3c1.2 0 2.1.6 3 1.9.9-1.3 1.8-1.9 3-1.9a3.5 3.5 0 0 1 3.4 3.5c0 4.5-6.4 8.4-6.4 8.4z"/>',
+  footprint: '<ellipse cx="12" cy="15.6" rx="4.4" ry="6.1"/><circle cx="8.3" cy="8.8" r="1.65"/><circle cx="11.5" cy="7.4" r="1.85"/><circle cx="14.7" cy="8.6" r="1.55"/>',
+  family: '<circle cx="9.2" cy="8.2" r="2.5"/><path d="M4.8 18.4c0-2.4 2-3.9 4.4-3.9s4.4 1.5 4.4 3.9"/><circle cx="16.4" cy="9.2" r="1.9"/><path d="M13.9 17.2c.2-1.7 1.4-2.8 2.7-2.8s2.5 1.1 2.7 2.8"/>',
+  basket: '<path d="M4.2 10.2h15.6l-1.5 9a2 2 0 0 1-2 1.7H7.7a2 2 0 0 1-2-1.7z"/><path d="M8.7 10.2 8.1 6.9A3.4 3.4 0 0 1 11.5 3.4h1A3.4 3.4 0 0 1 15.9 6.9l-.6 3.3"/><path d="M10.1 14.3v3.2M13.9 14.3v3.2"/>',
+  clock: '<circle cx="12" cy="12" r="8.1"/><path d="M12 7.5V12l3.1 2"/>',
+  bottle: '<path d="M9.6 8.6h4.8l1 2.9v7.4a2 2 0 0 1-2 2h-2.8a2 2 0 0 1-2-2v-7.4z"/><path d="M10.5 8.6V6.1a1.5 1.5 0 0 1 3 0v2.5"/><path d="M9.6 13.4h4.8"/>',
+  clipboard: '<rect x="5.6" y="5.2" width="12.8" height="14.8" rx="2.4"/><path d="M9.5 5.2V4.3A1.2 1.2 0 0 1 10.7 3.1h2.6a1.2 1.2 0 0 1 1.2 1.2v.9"/><path d="M9 11.6h6M9 15h4"/>',
+  book: '<path d="M5 5.6A1.6 1.6 0 0 1 6.6 4H11a2 2 0 0 1 2 2v13.2a2 2 0 0 0-2-1.8H6.6A1.6 1.6 0 0 1 5 15.8z"/><path d="M19 5.6A1.6 1.6 0 0 0 17.4 4H13a2 2 0 0 0-2 2v13.2a2 2 0 0 1 2-1.8h4.4A1.6 1.6 0 0 0 19 15.8z"/>',
+  sprout: '<path d="M12 20.4v-6.9"/><path d="M12 13.5a5.4 5.4 0 0 1 5.4-5.4 5.4 5.4 0 0 1-5.4 5.4z"/><path d="M12 13.5A5.4 5.4 0 0 0 6.6 8.1a5.4 5.4 0 0 0 5.4 5.4z"/>',
+  syringe: '<path d="M15.6 5.4 18 7.8"/><path d="M18.2 7.6 9.4 16.4l-3.8 1 1-3.8L15.4 5"/><path d="M10.6 11.6l2 2"/>',
+  gift: '<rect x="4.2" y="9.2" width="15.6" height="10.8" rx="2.3"/><path d="M4.2 13.4h15.6M12 9.2V20"/><path d="M12 9.2S10.7 5.2 8.6 5.2a1.9 1.9 0 0 0 0 4zM12 9.2s1.3-4 3.4-4a1.9 1.9 0 0 1 0 4z"/>',
+  bell: '<path d="M12 4.2a5 5 0 0 0-5 5v3.4L6 15.6h12l-1-3V9.2a5 5 0 0 0-5-5z"/><path d="M9.9 17.8a2.1 2.1 0 0 0 4.2 0"/>',
+  ribbon: '<path d="M12 20.2v-7.6"/><path d="M12 12.6 8.7 9.3a2.2 2.2 0 1 1 3.1-3.1l.2.2"/><path d="M12 12.6l3.3-3.3a2.2 2.2 0 1 0-3.1-3.1l-.2.2"/>',
+  import: '<path d="M12 4.4v9"/><path d="M8.6 10.2 12 13.6l3.4-3.4"/><path d="M5 16.8v1.6A1.6 1.6 0 0 0 6.6 20h10.8a1.6 1.6 0 0 0 1.6-1.6v-1.6"/>',
+  export: '<path d="M12 16.6V7.4"/><path d="M8.6 10.8 12 7.4l3.4 3.4"/><path d="M5 16.8v1.6A1.6 1.6 0 0 0 6.6 20h10.8a1.6 1.6 0 0 0 1.6-1.6v-1.6"/>',
+  settings: '<circle cx="12" cy="12" r="2.9"/><path d="M12 4.3v2.1M12 17.6v2.1M4.3 12h2.1M17.6 12h2.1M6.6 6.6l1.5 1.5M15.9 15.9l1.5 1.5M17.4 6.6l-1.5 1.5M8.1 15.9l-1.5 1.5"/>',
+  stethoscope: '<path d="M6.6 5.2v3.6a4 4 0 0 0 8 0V5.2"/><path d="M10.6 12.8v2.4a3.6 3.6 0 0 0 7.2 0v-2.4"/><circle cx="18.6" cy="10.4" r="1.7"/><path d="M5.2 5.2h2.8M14 5.2h2.8"/>',
+  mom: '<path d="M12 20.2s-6.4-3.9-6.4-8.4A3.5 3.5 0 0 1 9 8.3c1.2 0 2.1.6 3 1.9.9-1.3 1.8-1.9 3-1.9a3.5 3.5 0 0 1 3.4 3.5c0 4.5-6.4 8.4-6.4 8.4z"/><circle cx="12" cy="12.4" r="2.2"/>'
+};
+function initIcons() {
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    if (el.dataset.iconDone) return;
+    const g = ICON_SVG[el.dataset.icon];
+    if (!g) return;
+    el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + g + '</svg>';
+    el.dataset.iconDone = '1';
+  });
+}
+
 // ============ PAGE ILLUSTRATIONS (cute & warm) ============
 function initPageIllusts() {
   const illusts = {
@@ -4831,6 +4879,7 @@ loadData();
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
+  initIcons();
   initPageIllusts();
 })();
 
