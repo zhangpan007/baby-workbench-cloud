@@ -28,3 +28,7 @@ services:
       # 你的 fine-grained token（仅授权 baby-workbench-cloud 仓库、Contents: Read and write）。
       - key: GITHUB_TOKEN
         sync: false
+      # GitHub 写入 debounce：合并 5 分钟内的多次数据变更为一次 sync commit，
+      # 避免每次操作都触发 Render 部署（commit message 同步加 [skip render] 双保险）。
+      - key: GITHUB_DEBOUNCE_MS
+        value: "300000"

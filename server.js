@@ -176,11 +176,50 @@ async function githubRead() {
 // 串行化写入，避免并发更新互相覆盖
 let ghWriteQueue = Promise.resolve();
 let ghWriteAttempts = 0; // 同步计数器：确认 githubWrite 是否被调用（不依赖异步结果）
-function githubWrite(obj) {
-  ghWriteAttempts++;
+
+// Debounce：合并短时间内的多次写入为一次 GitHub PUT，避免每次点击都触发 Render 部署
+// 0 = 不 debounce（开发/调试用），>0 = 延迟 N 毫秒合并
+const GH_DEBOUNCE_MS = Number(process.env.GITHUB_DEBOUNCE_MS || 0);
+let ghWriteTimer = null;
+let ghWritePending = null;
+let ghWriteFlush = null; // Promise：当前等待中的 debounce 写入，可被外部 await 兜底
+
+function _enqueueWrite(obj) {
   ghWriteQueue = ghWriteQueue.then(() => _githubWriteOnce(obj)).catch(() => {});
   return ghWriteQueue;
 }
+function githubWrite(obj) {
+  ghWriteAttempts++;
+  if (GH_DEBOUNCE_MS <= 0) return _enqueueWrite(obj);
+  // Debounce 模式：保留最后一次 payload，timer 到期统一推送
+  ghWritePending = obj;
+  if (ghWriteTimer) clearTimeout(ghWriteTimer);
+  ghWriteFlush = new Promise((resolve) => {
+    ghWriteTimer = setTimeout(() => {
+      const payload = ghWritePending;
+      ghWritePending = null;
+      ghWriteTimer = null;
+      if (payload) {
+        _enqueueWrite(payload).then(resolve, resolve);
+      } else {
+        resolve();
+      }
+    }, GH_DEBOUNCE_MS);
+  });
+  return ghWriteFlush;
+}
+// 进程退出前立即 flush，避免数据丢失（本地缓存已写，GitHub 兜底同步最佳努力）
+function _flushPendingSync() {
+  if (ghWriteTimer && ghWritePending) {
+    clearTimeout(ghWriteTimer);
+    ghWriteTimer = null;
+    const payload = ghWritePending;
+    ghWritePending = null;
+    _enqueueWrite(payload); // 异步启动，不等结果（SIGTERM 宽限通常够用）
+  }
+}
+process.on('SIGTERM', _flushPendingSync);
+process.on('SIGINT', _flushPendingSync);
 async function _githubWriteOnce(obj) {
   // GitHub Contents API 的 content 字段必须是「整个文件内容」的 Base64 编码。
   // encryptObj 返回 "ENC1:<base64>" 明文字符串，必须整体再 Base64 一次，
@@ -189,7 +228,8 @@ async function _githubWriteOnce(obj) {
   const content = Buffer.from(fileContent, 'utf8').toString('base64');
   let lastBody = '';
   for (let attempt = 0; attempt < 3; attempt++) {
-    const body = { message: 'sync: update baby-workbench store', content };
+    // commit message 加 [skip render] 让 Render 跳过自动部署，避免频繁 sync 触发实例重启
+    const body = { message: 'sync: update baby-workbench store [skip render]', content };
     if (githubSha) body.sha = githubSha; // 存在则带 SHA 更新
     else console.error('[GH] 警告：githubSha 为空，将导致 422');
     try {
